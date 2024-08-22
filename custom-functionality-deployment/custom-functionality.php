@@ -98,13 +98,13 @@ add_shortcode( 'list_terms', 'list_terms_shortcode' );
 
 // WG - Add plugin update checker for GitHub
 
-require 'path/to/plugin-update-checker/plugin-update-checker.php';
+require 'https://github.com/locke85/webgefaehrte/blob/main/custom-functionality-deployment/includes/plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
-$updateChecker = Puc_v4_Factory::buildUpdateChecker(
+$updateChecker = PucFactory::buildUpdateChecker(
     'https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/',
     __FILE__, //Full path to the main plugin file.
-    'plugin' // Unique-plugin-slug
+    'custom-functionality-deployment' // Unique-plugin-slug
 );
 
 // Optional: Set the branch that contains the stable release.
