@@ -1,10 +1,43 @@
 <?php
 /*
-Plugin Name: Custom Functionality
+Plugin Name: webGefährte - Custom Functionality
 Description: Contains custom functionality and modifications.
-Version: 1.0
+Version: 1.1
 Author: Jan (webGefährte)
 */
+
+// GP - Add tag description to pages 
+
+function show_tag_descriptions() {
+	$taxonomy = 'post_tag';
+	$terms = get_the_terms(get_the_ID(), $taxonomy);
+  
+	if ($terms && !is_wp_error($terms)) {
+		echo '<ul>'; // Start the unordered list block
+		foreach ($terms as $term) {
+			$description = term_description($term, $taxonomy);
+  
+			if ($description && strpos($description, $term->name) !== false) {
+				// Check if the tag title is in the description and mark it as bold
+				$description = str_replace($term->name, '<strong>' . $term->name . '</strong>', $description);
+			}
+  
+			// Replace <p> with <div> inside <li> and add it as a list item
+			$description = str_replace('<p>', '<div>', $description);
+			$description = str_replace('</p>', '</div>', $description);
+			
+			echo '<li>' . $description . '</li>'; // Output the description as a list item
+		}
+		echo '</ul>'; // End the unordered list block
+	}
+  }
+  
+  function show_tag_descriptions_shortcode() {
+	  ob_start();
+	  show_tag_descriptions();
+	  return ob_get_clean();
+  }
+  add_shortcode('show_tag_descriptions', 'show_tag_descriptions_shortcode');  
 
 // GP - Add list of tags to page
 
