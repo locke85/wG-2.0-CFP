@@ -2,7 +2,7 @@
 /*
 Plugin Name: webGefährte - Custom Functionality
 Description: Contains custom functionality and modifications.
-Version: 1.2.0
+Version: 1.2.1
 Author: Jan (webGefährte)
 */
 
@@ -101,7 +101,7 @@ add_shortcode( 'list_terms', 'list_terms_shortcode' );
 require 'includes/plugin-update-checker/plugin-update-checker.php';
 
 $updateChecker = Puc_v4_Factory::buildUpdateChecker(
-    'https://github.com/locke85/webgefaehrte/',
+    'https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/custom-functionality',
     __FILE__,
     'custom-functionality'
 );
