@@ -2,7 +2,7 @@
 /*
 Plugin Name: webGefährte - Custom Functionality
 Description: Contains custom functionality and modifications.
-Version: 1.1
+Version: 1.2.0
 Author: Jan (webGefährte)
 */
 
@@ -96,3 +96,18 @@ function list_terms_shortcode( $atts ) {
 // Register the shortcode
 add_shortcode( 'list_terms', 'list_terms_shortcode' );
 
+// WG - Add plugin update checker for GitHub
+
+require 'includes/plugin-update-checker/plugin-update-checker.php';
+
+$updateChecker = Puc_v4_Factory::buildUpdateChecker(
+    'https://github.com/locke85/webgefaehrte/',
+    __FILE__,
+    'custom-functionality'
+);
+
+// Optional: Set a branch ('main' used by default)
+$updateChecker->setBranch('main');
+
+// Optional: Wenn das Repository privat ist, setze einen persönlichen Zugriffstoken
+// $updateChecker->setAuthentication('your-token-here');
