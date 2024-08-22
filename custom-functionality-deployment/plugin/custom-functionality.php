@@ -102,9 +102,9 @@ require 'path/to/plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $updateChecker = Puc_v4_Factory::buildUpdateChecker(
-    'https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/custom-functionality',
+    'https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/',
     __FILE__, //Full path to the main plugin file.
-    'custom-functionality' // Unique-plugin-or-theme-slug
+    'plugin' // Unique-plugin-slug
 );
 
 // Optional: Set the branch that contains the stable release.
