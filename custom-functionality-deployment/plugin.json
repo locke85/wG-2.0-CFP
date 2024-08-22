@@ -1,0 +1,52 @@
+{
+	"name": "webGefährte Custom Functionality Plugin",
+	"version": "1.2",
+	"download_url": "https://github.com/locke85/webgefaehrte/blob/main/custom-functionality-deployment/custom-functionality-plugin.zip",
+
+	"homepage": "https://webgefaehrte.de/",
+	"requires": "4.5",
+	"tested": "4.8",
+	"last_updated": "2024-08-22 16:17:00",
+	"upgrade_notice": "Syncs custom functionality across websites of the group system.",
+
+	"author": "Jan (webGefährte",
+	"author_homepage": "https://webgefaehrte.de/author/locke85/",
+
+	"sections": {
+		"description": "<strong>Custom Functionality Plugin</strong> enhances websites of members with a set of custom features and functions. This plugin is designed to be a flexible and robust solution for adding custom code, improving site performance, and extending theme functionality.</p><p>Key features include:</p><ul><li>Custom post types and taxonomies</li><li>Shortcodes for dynamic content</li><li>Enhanced security features</li><li>Custom widget and sidebar management</li></ul>",
+		"installation": "<p>To install the <strong>Custom Functionality Plugin</strong>, follow these steps:</p><ol><li>Download the latest version of the plugin from the repository.</li><li>Navigate to <code>Plugins > Add New</code> in your WordPress dashboard.</li><li>Click on <code>Upload Plugin</code> and select the downloaded ZIP file.</li><li>Click <code>Install Now</code>, then <code>Activate</code> the plugin.</li><li>Optional: Configure the plugin settings according to your needs in the <code>Settings > Custom Functionality</code> menu.</li></ol>",
+		"changelog": "<p><strong>Version 1.2.1</strong> - Released on 2024-08-22</p><ul><li>Added new glossar features'</li><li>Added Tag description for pages</li><li>Fixed bug with update checker</li></ul><p><strong>Version 1.0.0</strong> - Initial Release</p><ul><li>Introduced basic custom functionality features</li><li>Implemented custom widgets</li><li>Added shortcode support for dynamic content</li></ul>",
+		"custom_section": "<h3>Custom Section: Advanced Configuration</h3><p>This section provides advanced configuration options for developers. You can customize the behavior of this plugin by using filters and action hooks. For detailed documentation, please refer to the <a href='https://github.com/locke85/webgefaehrte/tree/main/docs'>official documentation</a>.</p><p>Example usage:</p><pre><code>add_filter('custom_functionality_option', function($value) { return 'new_value'; });</code></pre>"
+	},
+	
+	"icons" : {
+		"1x" : "https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/assets/icon-128x128.png",
+		"2x" : "https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/assets/icon-256x256.png"
+    },
+
+	"banners": {
+		"low": "https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/assets/banner-772x250.png",
+		"high": "https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/assets/banner-1544x500.png"
+	},
+
+	"translations": [
+		{
+			"language": "en_EN",
+			"version": "1.0",
+			"updated": "2024-08-22 23:22:42",
+			"package": "https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/languages/custom-functionality.pot"
+		},
+		{
+			"language": "de_DE",
+			"version": "1.0",
+			"updated": "2024-08-22 23:22:42",
+			"package": "https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/languages/custom-functionality-de_DE.po"
+		}
+	],
+
+	"rating": 5,
+	"num_ratings": 1,
+
+	"downloaded": 2,
+	"active_installs": 2
+}

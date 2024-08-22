@@ -98,13 +98,14 @@ add_shortcode( 'list_terms', 'list_terms_shortcode' );
 
 // WG - Add plugin update checker for GitHub
 
-require 'includes/plugin-update-checker/plugin-update-checker.php';
+require 'path/to/plugin-update-checker/plugin-update-checker.php';
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $updateChecker = Puc_v4_Factory::buildUpdateChecker(
     'https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/custom-functionality',
-    __FILE__,
-    'custom-functionality'
-);
+    __FILE__, //Full path to the main plugin file.
+    'custom-functionality' // Unique-plugin-or-theme-slug
+);require 'includes/plugin-update-checker/plugin-update-checker.php';
 
 // Optional: Set a branch ('main' used by default)
 $updateChecker->setBranch('main');
