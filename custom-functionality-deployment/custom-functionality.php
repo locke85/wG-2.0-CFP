@@ -3,9 +3,13 @@
 Plugin Name: webGefährte Custom Functionality Plugin
 Description: The Custom Functionality Plugin (CFP) extends WordPress sites with custom post types, new shortcodes or custom widgets w/o the using multiple 3rd-party plugins.
 
-Version: 1.4.0
+Version: 1.4.1
 Author: Jan (webGefährte)
 */
+
+// MailPoet - Disable Google Fonts
+
+add_filter('mailpoet_display_custom_fonts', function () {return false;});
 
 // WP - Activate Excerpt for pages
 
@@ -24,6 +28,14 @@ add_filter( 'generate_smooth_scroll_duration', 'tu_smooth_scroll_duration' );
 function tu_smooth_scroll_duration() {
     return 1000; // milliseconds
 }
+
+// GP - Apply smooth scroll to all hash links:
+
+add_filter( 'generate_smooth_scroll_elements', function( $elements ) {
+	$elements[] = 'a[href*="#"]';
+	
+	return $elements;
+  } );
 
 // GP -  Limit the number of words in manual excerpts
 
