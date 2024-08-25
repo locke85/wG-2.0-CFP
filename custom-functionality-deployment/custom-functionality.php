@@ -2,9 +2,23 @@
 /*
 Plugin Name: webGefährte - Custom Functionality
 Description: Contains custom functionality and modifications.
-Version: 1.2.3
+Version: 1.3.0
 Author: Jan (webGefährte)
 */
+
+// CF 7 - Activate Recaptcha and CF7 JS+CSS on relevant pages only
+
+function block_recaptcha_badge() {
+	$excluded_pages = array( 'kontakt', 'podcast', 'platz-reservieren' );
+  
+	if ( !is_page( $excluded_pages ) ) {
+	  wp_dequeue_script( 'google-recaptcha' );
+	  wp_deregister_script( 'google-recaptcha' );
+	  add_filter( 'wpcf7_load_js', '__return_false' );
+	  add_filter( 'wpcf7_load_css', '__return_false' );
+	}
+  }
+  add_action( 'wp_print_scripts', 'block_recaptcha_badge' );
 
 // YOAST - Add Tag basis to breadbrumb of tag archives
 add_filter( 'wpseo_breadcrumb_links', 'custom_tag_archive_breadcrumbs' );
