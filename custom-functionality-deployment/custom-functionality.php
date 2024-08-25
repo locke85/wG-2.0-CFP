@@ -143,10 +143,10 @@ add_shortcode( 'list_terms', 'list_terms_shortcode' );
 
 // WG - Add plugin update checker for GitHub
 
-require 'includes/plugin-update-checker/plugin-update-checker.php';
+require 'includes/plugin-update-checker/plugin-update-checker.php'; // Include the plugin update checker library
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
-$updateChecker = PucFactory::buildUpdateChecker(
+$updateChecker = PucFactory::buildUpdateChecker( // Create the update checker instance
     'https://github.com/locke85/webgefaehrte/',
     __FILE__, //Full path to the main plugin file.
     'custom-functionality-deployment' // Unique-plugin-slug
@@ -154,6 +154,9 @@ $updateChecker = PucFactory::buildUpdateChecker(
 
 // Optional: Set the branch that contains the stable release.
 $updateChecker->setBranch('main');
+
+// Enable release assets
+$updateChecker->enableReleaseAssets();
 
 // Optional: If you're using a private repository, specify the access token like this:
 // $updateChecker->setAuthentication('your-token-here');
