@@ -2,7 +2,7 @@
 /*
 Plugin Name: webGefährte - Custom Functionality
 Description: Contains custom functionality and modifications.
-Version: 1.3.1
+Version: 1.3.2
 Author: Jan (webGefährte)
 */
 
@@ -145,7 +145,7 @@ add_shortcode( 'list_terms', 'list_terms_shortcode' );
 
 // Include the plugin update checker library
 require 'includes/plugin-update-checker/plugin-update-checker.php';
-use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+use YahnisElsts\PluginUpdateChecker\v5p4\PucFactory;
 
 // Create the update checker instance
 $updateChecker = PucFactory::buildUpdateChecker(
@@ -158,7 +158,7 @@ $updateChecker = PucFactory::buildUpdateChecker(
 $updateChecker->setBranch('main');
 
 // Enable release assets
-$updateChecker->enableReleaseAssets();
+$updateChecker->getVcsApi()->enableReleaseAssets();
 
 // Optional: If you're using a private repository, specify the access token like this:
 // $updateChecker->setAuthentication('your-token-here');
