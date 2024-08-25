@@ -18,9 +18,38 @@ Description: The **Custom Functionality Plugin** is designed to extend your Word
 3. **Activate**: Activate the plugin through the 'Plugins' menu in WordPress.
 4. **Configure**: Go to `Settings > Custom Functionality` to configure the plugin.
 
-Version: 1.3.3
+Version: 1.4.0
 Author: Jan (webGefährte)
 */
+
+// WP - Activate Excerpt for pages
+
+ add_post_type_support( 'page', 'excerpt');
+
+// Owl carousel - Load JQuery
+
+add_action( 'wp_enqueue_scripts', 'tu_load_jquery' );
+function tu_load_jquery() {
+    wp_enqueue_script( 'jquery' );
+}; 
+
+// GP - Edit smooth-scroll
+
+add_filter( 'generate_smooth_scroll_duration', 'tu_smooth_scroll_duration' );
+function tu_smooth_scroll_duration() {
+    return 1000; // milliseconds
+}
+
+// GP -  Limit the number of words in manual excerpts
+
+ add_filter( 'get_the_excerpt', function( $excerpt, $post ) {
+	if ( has_excerpt( $post ) ) {
+		$excerpt_length = apply_filters( 'excerpt_length', 15 );
+		$excerpt_more   = apply_filters( 'excerpt_more', ' ' . '[&hellip;]' );
+		$excerpt        = wp_trim_words( $excerpt, $excerpt_length, $excerpt_more );
+	}
+	return $excerpt;
+  }, 10, 2 );
 
 // CF7 - Redirect to thank-you page dynamically - Inject JavaScript into footer
 
