@@ -2,9 +2,48 @@
 /*
 Plugin Name: webGefährte - Custom Functionality
 Description: Contains custom functionality and modifications.
-Version: 1.2.1
+Version: 1.2.2
 Author: Jan (webGefährte)
 */
+
+// YOAST - Add Tag basis to breadbrumb of tag archives
+
+add_filter( 'wpseo_breadcrumb_links', 'custom_tag_archive_breadcrumbs' );
+
+/**
+ * Custom breadcrumb paths for tag archive pages, dynamically pulling from the "Schlagwort-Basis" setting.
+ *
+ * @param array $links Default breadcrumb links.
+ * @return array Modified breadcrumb links.
+ */
+function custom_tag_archive_breadcrumbs( $links ) {
+
+    if ( is_tag() ) {
+        // Get the custom "Schlagwort-Basis" from the settings
+        $tag_base = get_option( 'tag_base', 'schlagwort' ); // Default to 'schlagwort' if not set
+        
+        // Construct the full URL based on the site's home URL and the tag base
+        $url = home_url( '/' . $tag_base . '/' );
+
+        // Convert the URL part into a human-readable format for the breadcrumb text
+        // Replace hyphens with spaces, and capitalize the first letter of each word
+        $text = ucwords( str_replace( '-', ' ', $tag_base ) );
+
+        // Create the new breadcrumb for the base
+        $breadcrumb_base = array(
+            'url'  => $url,
+            'text' => $text,
+        );
+
+        // Retain the current tag in the breadcrumbs
+        $current_tag = array_pop( $links );
+
+        // Merge the breadcrumbs with the new base and the current tag
+        $links = array_merge( $links, array( $breadcrumb_base, $current_tag ) );
+    }
+
+    return $links;
+}
 
 // GP - Add tag description to pages 
 
@@ -98,11 +137,11 @@ add_shortcode( 'list_terms', 'list_terms_shortcode' );
 
 // WG - Add plugin update checker for GitHub
 
-require 'https://github.com/locke85/webgefaehrte/blob/main/custom-functionality-deployment/includes/plugin-update-checker/plugin-update-checker.php';
+require 'includes/plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $updateChecker = PucFactory::buildUpdateChecker(
-    'https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/',
+    'https://github.com/locke85/webgefaehrte/',
     __FILE__, //Full path to the main plugin file.
     'custom-functionality-deployment' // Unique-plugin-slug
 );
