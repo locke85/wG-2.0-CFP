@@ -1,22 +1,7 @@
 <?php
 /*
-Plugin Name: webGefährte - Custom Functionality
-Description: The **Custom Functionality Plugin** is designed to extend your WordPress site with custom features tailored to your needs. Whether you want to create custom post types, add new shortcodes, or manage custom widgets, this plugin provides a flexible and extendable platform.
-
-### Key Features
-
-- Create and manage custom post types and taxonomies.
-- Add dynamic content using shortcodes.
-- Develop custom widgets for your theme.
-- Easily configurable and extendable through hooks and filters.
-- Centralized management of custom functionalities across multiple sites.
-
-## Installation
-
-1. **Download the Plugin**: Clone the repository or download the ZIP file from the [releases page](https://github.com/locke85/webgefaehrte/releases).
-2. **Upload to WordPress**: Upload the `custom-functionality-deployment` folder to the `/wp-content/plugins/` directory.
-3. **Activate**: Activate the plugin through the 'Plugins' menu in WordPress.
-4. **Configure**: Go to `Settings > Custom Functionality` to configure the plugin.
+Plugin Name: webGefährte Custom Functionality Plugin
+Description: The Custom Functionality Plugin (CFP) extends WordPress sites with custom post types, new shortcodes or custom widgets w/o the using multiple 3rd-party plugins.
 
 Version: 1.4.0
 Author: Jan (webGefährte)
