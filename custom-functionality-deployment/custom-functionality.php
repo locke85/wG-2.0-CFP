@@ -2,7 +2,7 @@
 /*
 Plugin Name: webGefährte - Custom Functionality
 Description: Contains custom functionality and modifications.
-Version: 1.3.0
+Version: 1.3.1
 Author: Jan (webGefährte)
 */
 
@@ -143,10 +143,12 @@ add_shortcode( 'list_terms', 'list_terms_shortcode' );
 
 // WG - Add plugin update checker for GitHub
 
-require 'includes/plugin-update-checker/plugin-update-checker.php'; // Include the plugin update checker library
+// Include the plugin update checker library
+require 'includes/plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
-$updateChecker = PucFactory::buildUpdateChecker( // Create the update checker instance
+// Create the update checker instance
+$updateChecker = PucFactory::buildUpdateChecker(
     'https://github.com/locke85/webgefaehrte/',
     __FILE__, //Full path to the main plugin file.
     'custom-functionality-deployment' // Unique-plugin-slug
