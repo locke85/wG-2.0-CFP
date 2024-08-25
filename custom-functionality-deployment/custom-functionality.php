@@ -2,9 +2,31 @@
 /*
 Plugin Name: webGefährte - Custom Functionality
 Description: Contains custom functionality and modifications.
-Version: 1.3.2
+Version: 1.3.3
 Author: Jan (webGefährte)
 */
+
+// CF7 - Redirect to thank-you page dynamically - Inject JavaScript into footer
+
+function cf7_footer_script() { ?>
+	<script>
+	document.addEventListener('wpcf7mailsent', function(event) {
+		// Get the current domain
+		var currentDomain = window.location.hostname;
+  
+		// Construct the URL for the contact page and thank-you page
+		var contactPage = 'https://' + currentDomain + '/kontakt';
+		var thankYouPage = 'https://' + currentDomain + '/kontakt/danke';
+  
+		// Redirect to the thank-you page after form submission
+		location.href = thankYouPage;
+	}, false);
+	</script>
+	<?php
+  }
+  
+  // Hook the function into the WordPress footer
+  add_action('wp_footer', 'cf7_footer_script');  
 
 // CF 7 - Activate Recaptcha and CF7 JS+CSS on relevant pages only
 
