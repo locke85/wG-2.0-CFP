@@ -1,6 +1,6 @@
 {
 	"name": "webGefährte Custom Functionality Plugin",
-	"version": "1.4.1",
+	"version": "1.4.3",
 	"download_url": "https://github.com/locke85/webgefaehrte/blob/main/custom-functionality-deployment.zip",
 
 	"homepage": "https://webgefaehrte.de/",
@@ -44,7 +44,7 @@
 		}
 	],
 
-	"changelog": "<p>Version 1.0.0: Initial release with Glossary features.</p>1.1.0: Added tag basis to breadcrumb.</p></p>1.2.0: Added plugin update checker functionality.</p><p>Version 1.3.0: Added contact form and recaptcha features.</p><p>Version 1.4.1: Add smooth-scroll, disable Google Fonts, Add slider features.</p>", 
+	"changelog": "<p>Version 1.0.0: Initial release with Glossary features.</p>1.1.0: Added tag basis to breadcrumb.</p></p>1.2.0: Added plugin update checker functionality.</p><p>Version 1.3.0: Added contact form and recaptcha features.</p><p>Version 1.4.1: Add smooth-scroll, disable Google Fonts, Add slider features.</p><p>Version 1.4.2: Adds Tooltip for glossary feature.</p><p>Version 1.4.3: Adds tag support for pages in Wordpress. Bug fixing and code cleanup.</p>", 
 
 	"rating": {
         "rating": "5",

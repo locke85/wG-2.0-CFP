@@ -3,9 +3,17 @@
 Plugin Name: webGefährte Custom Functionality Plugin
 Description: The Custom Functionality Plugin (CFP) extends WordPress sites with custom post types, new shortcodes or custom widgets w/o the using multiple 3rd-party plugins.
 
-Version: 1.4.1
+Version: 1.4.3
 Author: Jan (webGefährte)
 */
+
+// GP - Activate smooth-scroll to all page internal links 
+
+add_filter( 'generate_smooth_scroll_elements', function( $elements ) {
+    $elements[] = 'a:not([data-gpmodal-trigger="gp-search"])[href*="#"]';
+    
+    return $elements;
+} );
 
 // MailPoet - Disable Google Fonts
 
@@ -13,7 +21,20 @@ add_filter('mailpoet_display_custom_fonts', function () {return false;});
 
 // WP - Activate Excerpt for pages
 
- add_post_type_support( 'page', 'excerpt');
+add_post_type_support( 'page', 'excerpt');
+
+add_filter('generate_dynamic_element_text', function($custom_field, $block){
+
+    if($block['attrs']['anchor'] = 'dynamic-excerpt'){
+        if ( ! empty( $block['attrs']['gpDynamicTextCustomField'] ) && $block['attrs']['gpDynamicTextCustomField'] == 'the_excerpt' ){
+            if (has_excerpt()) {
+                $excerpt = wp_strip_all_tags(get_the_excerpt());
+                $custom_field = $excerpt;
+            }
+        }
+        return $custom_field;
+    }
+    },20, 2);
 
 // Owl carousel - Load JQuery
 
@@ -115,40 +136,7 @@ function custom_tag_archive_breadcrumbs( $links ) {
     return $links;
 }
 
-// GP - Add tag description to pages 
-
-function show_tag_descriptions() {
-	$taxonomy = 'post_tag';
-	$terms = get_the_terms(get_the_ID(), $taxonomy);
-  
-	if ($terms && !is_wp_error($terms)) {
-		echo '<ul>'; // Start the unordered list block
-		foreach ($terms as $term) {
-			$description = term_description($term, $taxonomy);
-  
-			if ($description && strpos($description, $term->name) !== false) {
-				// Check if the tag title is in the description and mark it as bold
-				$description = str_replace($term->name, '<strong>' . $term->name . '</strong>', $description);
-			}
-  
-			// Replace <p> with <div> inside <li> and add it as a list item
-			$description = str_replace('<p>', '<div>', $description);
-			$description = str_replace('</p>', '</div>', $description);
-			
-			echo '<li>' . $description . '</li>'; // Output the description as a list item
-		}
-		echo '</ul>'; // End the unordered list block
-	}
-  }
-  
-  function show_tag_descriptions_shortcode() {
-	  ob_start();
-	  show_tag_descriptions();
-	  return ob_get_clean();
-  }
-  add_shortcode('show_tag_descriptions', 'show_tag_descriptions_shortcode');  
-
-// GP - Add list of tags to page
+// GP - Add list of tags to glossary page
 
 function list_terms_shortcode( $atts ) {
 	// Define default attributes for the shortcode
@@ -189,9 +177,11 @@ function list_terms_shortcode( $atts ) {
 
 		// Generate list items for each term in the group
 		foreach ( $terms_group as $term ) {
+			// Create list item with tooltip displaying the term description
 			$output .= sprintf(
-				'<li><a href="%s">%s</a> <span class="term-count">(%s)</span></li>',
+				'<li><a href="%s" title="%s">%s</a> <span class="term-count">(%s)</span></li>',
 				esc_url( get_term_link( $term ) ),
+				esc_attr( $term->description ), // Add the description as the title attribute for the tooltip
 				esc_html( $term->name ),
 				$term->count
 			);
@@ -204,6 +194,83 @@ function list_terms_shortcode( $atts ) {
 
 // Register the shortcode
 add_shortcode( 'list_terms', 'list_terms_shortcode' );
+
+// GP - Enable tags for pages in WordPress
+
+// Function to add the 'post_tag' taxonomy to 'page' post type
+function add_tags_to_pages() {
+    // Register the 'post_tag' taxonomy for the 'page' post type
+    register_taxonomy_for_object_type('post_tag', 'page');
+}
+
+// Hook the function to the 'init' action to execute it when WordPress initializes
+add_action('init', 'add_tags_to_pages');
+
+// Optional: Ensure tags are recognized in queries involving pages
+function include_tags_in_queries($query) {
+    // Check if the query is not in the admin area and is the main query
+    if (!is_admin() && $query->is_main_query()) {
+        // Check if we are on a tag archive page
+        if ($query->is_tag()) {
+            // Include pages in the tag archive query
+            $query->set('post_type', array('post', 'page'));
+        }
+    }
+}
+
+// Hook the function to the 'pre_get_posts' action to modify queries
+add_action('pre_get_posts', 'include_tags_in_queries');
+
+// GP - Add tag description to pages 
+
+function show_tag_descriptions() {
+    $taxonomy = 'post_tag';
+    $terms = array();
+
+    // Check if it's a single post or page
+    if (is_singular()) {
+        // Get terms associated with the current post or page
+        $terms = get_the_terms(get_the_ID(), $taxonomy);
+    } 
+    // Check if it's a tag archive
+    elseif (is_tag()) {
+        // Get the current tag object
+        $current_tag = get_queried_object();
+        $terms = array($current_tag);
+    }
+    // Check if it's any other taxonomy archive (optional, can be extended for categories)
+    elseif (is_tax($taxonomy)) {
+        $current_term = get_queried_object();
+        $terms = array($current_term);
+    }
+
+    // Check if terms were found and no error occurred
+    if ($terms && !is_wp_error($terms)) {
+        echo '<ul>'; // Start the unordered list block
+        foreach ($terms as $term) {
+            $description = term_description($term, $taxonomy);
+
+            if ($description && strpos($description, $term->name) !== false) {
+                // Check if the tag title is in the description and mark it as bold
+                $description = str_replace($term->name, '<strong>' . $term->name . '</strong>', $description);
+            }
+
+            // Replace <p> with <div> inside <li> and add it as a list item
+            $description = str_replace('<p>', '<div>', $description);
+            $description = str_replace('</p>', '</div>', $description);
+            
+            echo '<li>' . $description . '</li>'; // Output the description as a list item
+        }
+        echo '</ul>'; // End the unordered list block
+    }
+}
+  
+  function show_tag_descriptions_shortcode() {
+	  ob_start();
+	  show_tag_descriptions();
+	  return ob_get_clean();
+  }
+  add_shortcode('show_tag_descriptions', 'show_tag_descriptions_shortcode');  
 
 // WG - Add plugin update checker for GitHub
 
