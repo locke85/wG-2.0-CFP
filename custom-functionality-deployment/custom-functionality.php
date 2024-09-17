@@ -3,9 +3,165 @@
 Plugin Name: webGefährte Custom Functionality Plugin
 Description: The Custom Functionality Plugin (CFP) extends WordPress sites with custom post types, new shortcodes or custom widgets w/o the using multiple 3rd-party plugins.
 
-Version: 1.4.3
+Version: 1.5.0
 Author: Jan (webGefährte)
 */
+
+
+/* wG - Registers custom fields for posts, pages, and GeneratePress theme elements.
+ * Fields include: wg_h1_title, wg_div_tagline, and wg_button_cta.
+ * wg_button_cta contains two sub-fields: button text and URL link.
+ */
+
+function register_custom_fields() {
+    // Register custom fields for the 'wg_fieldgroup_header' field group
+    if( function_exists('acf_add_local_field_group') ) {
+
+        acf_add_local_field_group(array(
+            'key' => 'group_wg_fieldgroup_header',
+            'title' => 'Header Fields',
+            'fields' => array(
+                array(
+                    'key' => 'field_wg_h1_title',
+                    'label' => 'Title (H1)',
+                    'name' => 'wg_h1_title',
+                    'type' => 'text',
+                    'instructions' => 'Main headline for the page or post',
+                    'default_value' => 'Fokus-Keyphrase: spannender Bezugstext',
+                    'placeholder' => '',
+                ),
+                array(
+                    'key' => 'field_wg_div_tagline',
+                    'label' => 'Tagline',
+                    'name' => 'wg_div_tagline',
+                    'type' => 'text',
+                    'instructions' => 'Tagline above the main headline',
+                    'default_value' => '',
+                    'placeholder' => '',
+                ),
+                array(
+                    'key' => 'field_wg_button_cta',
+                    'label' => 'CTA',
+                    'name' => 'wg_button_cta',
+                    'type' => 'group',
+                    'instructions' => 'Primary call-to-action for the user',
+                    'layout' => 'block',
+                    'sub_fields' => array(
+                        array(
+                            'key' => 'field_button_text',
+                            'label' => 'Button Text',
+                            'name' => 'button_text',
+                            'type' => 'text',
+                            'instructions' => 'Text to display on the button',
+                            'default_value' => '',
+                            'placeholder' => '',
+                        ),
+                        array(
+                            'key' => 'field_button_url',
+                            'label' => 'Button URL',
+                            'name' => 'button_url',
+                            'type' => 'url',
+                            'instructions' => 'URL to redirect when the button is clicked',
+                            'default_value' => '',
+                            'placeholder' => '',
+                        ),
+                    ),
+                ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'post',
+                    ),
+                ),
+                array(
+                    array(
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'page',
+                    ),
+                ),
+                array(
+                    array(
+                        'param' => 'generatepress_element',
+                        'operator' => '==',
+                        'value' => 'element',
+                    ),
+                ),
+            ),
+            'position' => 'normal',
+        ));
+    }
+}
+
+// Hook into ACF initialization
+add_action('acf/init', 'register_custom_fields');
+
+function wg_register_custom_fields() {
+    add_meta_box(
+        'wg_feldgruppe_header', // ID der Metabox
+        'wG-Feldgruppe-Header', // Titel der Metabox
+        'wg_display_custom_fields', // Callback-Funktion, um die Felder anzuzeigen
+        ['post', 'page', 'generatepress_page'], // Post-Typen: Beiträge, Seiten und GeneratePress Elements
+        'normal', // Position der Metabox
+        'high' // Priorität der Metabox
+    );
+}
+add_action('add_meta_boxes', 'wg_register_custom_fields');
+
+function wg_display_custom_fields($post) {
+    // Abrufen der gespeicherten Werte
+    $wg_h1_title = get_post_meta($post->ID, 'wg_h1_title', true);
+    $wg_div_tagline = get_post_meta($post->ID, 'wg_div_tagline', true);
+    $wg_button_cta_text = get_post_meta($post->ID, 'wg_button_cta_text', true);
+    $wg_button_cta_url = get_post_meta($post->ID, 'wg_button_cta_url', true);
+
+    // Felder anzeigen
+    ?>
+    <p>
+        <label for="wg_h1_title">Titel (H1)</label>
+        <input type="text" name="wg_h1_title" id="wg_h1_title" value="<?php echo esc_attr($wg_h1_title ?: 'Fokus-Keyphrase: spannender Bezugstext'); ?>" />
+        <br />
+        <span>Hauptüberschrift für Seite oder Beitrag</span>
+    </p>
+    <p>
+        <label for="wg_div_tagline">Tagline</label>
+        <input type="text" name="wg_div_tagline" id="wg_div_tagline" value="<?php echo esc_attr($wg_div_tagline); ?>" />
+        <br />
+        <span>Tagline über der Hauptüberschrift</span>
+    </p>
+    <p>
+        <label for="wg_button_cta_text">CTA Button-Text</label>
+        <input type="text" name="wg_button_cta_text" id="wg_button_cta_text" value="<?php echo esc_attr($wg_button_cta_text); ?>" />
+    </p>
+    <p>
+        <label for="wg_button_cta_url">CTA Button-URL</label>
+        <input type="url" name="wg_button_cta_url" id="wg_button_cta_url" value="<?php echo esc_attr($wg_button_cta_url); ?>" />
+        <br />
+        <span>Primäre Handlungsempfehlung für den Nutzer</span>
+    </p>
+    <?php
+}
+
+function wg_save_custom_fields($post_id) {
+    // Speichern der Daten
+    if (array_key_exists('wg_h1_title', $_POST)) {
+        update_post_meta($post_id, 'wg_h1_title', sanitize_text_field($_POST['wg_h1_title']));
+    }
+    if (array_key_exists('wg_div_tagline', $_POST)) {
+        update_post_meta($post_id, 'wg_div_tagline', sanitize_text_field($_POST['wg_div_tagline']));
+    }
+    if (array_key_exists('wg_button_cta_text', $_POST)) {
+        update_post_meta($post_id, 'wg_button_cta_text', sanitize_text_field($_POST['wg_button_cta_text']));
+    }
+    if (array_key_exists('wg_button_cta_url', $_POST)) {
+        update_post_meta($post_id, 'wg_button_cta_url', esc_url_raw($_POST['wg_button_cta_url']));
+    }
+}
+add_action('save_post', 'wg_save_custom_fields');
+
 
 // GP - Activate smooth-scroll to all page internal links 
 
@@ -280,7 +436,7 @@ use YahnisElsts\PluginUpdateChecker\v5p4\PucFactory;
 
 // Create the update checker instance
 $updateChecker = PucFactory::buildUpdateChecker(
-    'https://github.com/locke85/webgefaehrte/',
+    'https://github.com/locke85/wG-2.0-CFP/',
     __FILE__, //Full path to the main plugin file.
     'custom-functionality-deployment' // Unique-plugin-slug
 );
