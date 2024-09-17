@@ -1,13 +1,13 @@
 {
 	"name": "webGefährte Custom Functionality Plugin",
-	"version": "1.5.0",
-	"download_url": "https://github.com/locke85/webgefaehrte/blob/main/custom-functionality-deployment.zip",
+	"version": "1.5.1",
+	"download_url": "https://github.com/locke85/wG-2.0-CFP/blob/main/custom-functionality-deployment.zip",
 
 	"homepage": "https://webgefaehrte.de/",
 	"requires": "4.5",
 	"tested": "4.8",
 	"last_updated": "2024-08-22 16:17:00",
-	"upgrade_notice": "Syncs custom functionality across websites of the group system.",
+	"upgrade_notice": "Syncs custom functionality across websites of the online marketing community.",
 
 	"author": "Jan (webGefährte)",
 	"author_homepage": "https://webgefaehrte.de/author/locke85/",
@@ -20,13 +20,13 @@
 	},
 	
 	"icons" : {
-		"1x" : "https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/assets/icon-128x128.png",
-		"2x" : "https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/assets/icon-256x256.png"
+		"1x" : "https://github.com/locke85/wG-2.0-CFP/tree/main/custom-functionality-deployment/assets/icon-128x128.png",
+		"2x" : "https://github.com/locke85/wG-2.0-CFP/tree/main/custom-functionality-deployment/assets/icon-256x256.png"
     },
 
 	"banners": {
-		"low": "https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/assets/banner-772x250.png",
-		"high": "https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/assets/banner-1544x500.png"
+		"low": "https://github.com/locke85/wG-2.0-CFP/tree/main/custom-functionality-deployment/assets/banner-772x250.png",
+		"high": "https://github.com/locke85/wG-2.0-CFP/tree/main/custom-functionality-deployment/assets/banner-1544x500.png"
 	},
 
 	"translations": [
@@ -34,17 +34,29 @@
 			"language": "en_EN",
 			"version": "1.0",
 			"updated": "2024-08-22 23:22:42",
-			"package": "https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/languages/custom-functionality.pot"
+			"package": "https://github.com/locke85/wG-2.0-CFP/tree/main/custom-functionality-deployment/languages/custom-functionality.pot"
 		},
 		{
 			"language": "de_DE",
 			"version": "1.0",
 			"updated": "2024-08-22 23:22:42",
-			"package": "https://github.com/locke85/webgefaehrte/tree/main/custom-functionality-deployment/languages/custom-functionality-de_DE.po"
+			"package": "https://github.com/locke85/wG-2.0-CFP/tree/main/custom-functionality-deployment/languages/custom-functionality-de_DE.po"
 		}
 	],
 
-	"changelog": "<p>Version 1.0.0: Initial release with Glossary features.</p>1.1.0: Added tag basis to breadcrumb.</p></p>1.2.0: Added plugin update checker functionality.</p><p>Version 1.3.0: Added contact form and recaptcha features.</p><p>Version 1.4.1: Add smooth-scroll, disable Google Fonts, Add slider features.</p><p>Version 1.4.2: Adds Tooltip for glossary feature.</p><p>Version 1.4.3: Adds tag support for pages in Wordpress. Bug fixing and code cleanup.</p><p>Version 1.5.0: Adds custom fields for post and page header via GeneratePress theme elements.</p>", 
+	"changelog": "
+	
+	<p>Version 1.0.0: Initial release with Glossary features.</p>
+	<p>Version 1.1.0: Added tag basis to breadcrumb.</p>
+	<p>Version 1.2.0: Added plugin update checker functionality.</p>
+	<p>Version 1.3.0: Added contact form and recaptcha features.</p>
+	<p>Version 1.4.1: Add smooth-scroll, disable Google Fonts, Add slider features.</p>
+	<p>Version 1.4.2: Adds Tooltip for glossary feature.</p>
+	<p>Version 1.4.3: Adds tag support for pages in Wordpress. Bug fixing and code cleanup.</p>
+	<p>Version 1.5.0: Adds custom fields for post and page header via GeneratePress theme elements.</p>
+	<p>Version 1.5.1: Adds custom field support for podcast CPT and code commentary in EN.</p>
+	
+	", 
 
 	"rating": {
         "rating": "5",

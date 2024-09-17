@@ -3,150 +3,71 @@
 Plugin Name: webGefährte Custom Functionality Plugin
 Description: The Custom Functionality Plugin (CFP) extends WordPress sites with custom post types, new shortcodes or custom widgets w/o the using multiple 3rd-party plugins.
 
-Version: 1.5.0
+Version: 1.5.1
 Author: Jan (webGefährte)
 */
 
 
-/* wG - Registers custom fields for posts, pages, and GeneratePress theme elements.
+/* wG - Registers custom fields for posts, pages, and podcast.
  * Fields include: wg_h1_title, wg_div_tagline, and wg_button_cta.
  * wg_button_cta contains two sub-fields: button text and URL link.
  */
-
-function register_custom_fields() {
-    // Register custom fields for the 'wg_fieldgroup_header' field group
-    if( function_exists('acf_add_local_field_group') ) {
-
-        acf_add_local_field_group(array(
-            'key' => 'group_wg_fieldgroup_header',
-            'title' => 'Header Fields',
-            'fields' => array(
-                array(
-                    'key' => 'field_wg_h1_title',
-                    'label' => 'Title (H1)',
-                    'name' => 'wg_h1_title',
-                    'type' => 'text',
-                    'instructions' => 'Main headline for the page or post',
-                    'default_value' => 'Fokus-Keyphrase: spannender Bezugstext',
-                    'placeholder' => '',
-                ),
-                array(
-                    'key' => 'field_wg_div_tagline',
-                    'label' => 'Tagline',
-                    'name' => 'wg_div_tagline',
-                    'type' => 'text',
-                    'instructions' => 'Tagline above the main headline',
-                    'default_value' => '',
-                    'placeholder' => '',
-                ),
-                array(
-                    'key' => 'field_wg_button_cta',
-                    'label' => 'CTA',
-                    'name' => 'wg_button_cta',
-                    'type' => 'group',
-                    'instructions' => 'Primary call-to-action for the user',
-                    'layout' => 'block',
-                    'sub_fields' => array(
-                        array(
-                            'key' => 'field_button_text',
-                            'label' => 'Button Text',
-                            'name' => 'button_text',
-                            'type' => 'text',
-                            'instructions' => 'Text to display on the button',
-                            'default_value' => '',
-                            'placeholder' => '',
-                        ),
-                        array(
-                            'key' => 'field_button_url',
-                            'label' => 'Button URL',
-                            'name' => 'button_url',
-                            'type' => 'url',
-                            'instructions' => 'URL to redirect when the button is clicked',
-                            'default_value' => '',
-                            'placeholder' => '',
-                        ),
-                    ),
-                ),
-            ),
-            'location' => array(
-                array(
-                    array(
-                        'param' => 'post_type',
-                        'operator' => '==',
-                        'value' => 'post',
-                    ),
-                ),
-                array(
-                    array(
-                        'param' => 'post_type',
-                        'operator' => '==',
-                        'value' => 'page',
-                    ),
-                ),
-                array(
-                    array(
-                        'param' => 'generatepress_element',
-                        'operator' => '==',
-                        'value' => 'element',
-                    ),
-                ),
-            ),
-            'position' => 'normal',
-        ));
-    }
-}
-
-// Hook into ACF initialization
-add_action('acf/init', 'register_custom_fields');
-
-function wg_register_custom_fields() {
+ 
+ // Add meta boxes for custom fields
+ function wg_register_custom_fields() {
     add_meta_box(
-        'wg_feldgruppe_header', // ID der Metabox
-        'wG-Feldgruppe-Header', // Titel der Metabox
-        'wg_display_custom_fields', // Callback-Funktion, um die Felder anzuzeigen
-        ['post', 'page', 'generatepress_page'], // Post-Typen: Beiträge, Seiten und GeneratePress Elements
-        'normal', // Position der Metabox
-        'high' // Priorität der Metabox
+        'wg_fieldgroup_header', // ID of the metabox
+        'wG Fieldgroup Header', // Title of the metabox
+        'wg_display_custom_fields', // Callback function to display the fields
+        ['post', 'page', 'generatepress_page', 'podcast'], // Support for posts, pages, GeneratePress elements, and podcasts
+        'normal', // Metabox position
+        'high' // Priority of the metabox
     );
 }
 add_action('add_meta_boxes', 'wg_register_custom_fields');
 
+/**
+ * Display the custom fields in the metabox.
+ */
 function wg_display_custom_fields($post) {
-    // Abrufen der gespeicherten Werte
+    // Retrieve the saved values
     $wg_h1_title = get_post_meta($post->ID, 'wg_h1_title', true);
     $wg_div_tagline = get_post_meta($post->ID, 'wg_div_tagline', true);
     $wg_button_cta_text = get_post_meta($post->ID, 'wg_button_cta_text', true);
     $wg_button_cta_url = get_post_meta($post->ID, 'wg_button_cta_url', true);
 
-    // Felder anzeigen
+    // Display the fields
     ?>
     <p>
-        <label for="wg_h1_title">Titel (H1)</label>
+        <label for="wg_h1_title">Title (H1)</label>
         <input type="text" name="wg_h1_title" id="wg_h1_title" value="<?php echo esc_attr($wg_h1_title ?: 'Fokus-Keyphrase: spannender Bezugstext'); ?>" />
         <br />
-        <span>Hauptüberschrift für Seite oder Beitrag</span>
+        <span>Main headline for the page or post</span>
     </p>
     <p>
         <label for="wg_div_tagline">Tagline</label>
         <input type="text" name="wg_div_tagline" id="wg_div_tagline" value="<?php echo esc_attr($wg_div_tagline); ?>" />
         <br />
-        <span>Tagline über der Hauptüberschrift</span>
+        <span>Tagline above the main headline</span>
     </p>
     <p>
-        <label for="wg_button_cta_text">CTA Button-Text</label>
+        <label for="wg_button_cta_text">CTA Button Text</label>
         <input type="text" name="wg_button_cta_text" id="wg_button_cta_text" value="<?php echo esc_attr($wg_button_cta_text); ?>" />
     </p>
     <p>
-        <label for="wg_button_cta_url">CTA Button-URL</label>
+        <label for="wg_button_cta_url">CTA Button URL</label>
         <input type="url" name="wg_button_cta_url" id="wg_button_cta_url" value="<?php echo esc_attr($wg_button_cta_url); ?>" />
         <br />
-        <span>Primäre Handlungsempfehlung für den Nutzer</span>
+        <span>Primary call-to-action for the user</span>
     </p>
     <?php
 }
 
+/**
+ * Save custom fields data.
+ */
 function wg_save_custom_fields($post_id) {
-    // Speichern der Daten
+    // Save the data
     if (array_key_exists('wg_h1_title', $_POST)) {
         update_post_meta($post_id, 'wg_h1_title', sanitize_text_field($_POST['wg_h1_title']));
     }
@@ -161,7 +82,6 @@ function wg_save_custom_fields($post_id) {
     }
 }
 add_action('save_post', 'wg_save_custom_fields');
-
 
 // GP - Activate smooth-scroll to all page internal links 
 
@@ -192,6 +112,17 @@ add_filter('generate_dynamic_element_text', function($custom_field, $block){
     }
     },20, 2);
 
+// GP -  Limit the number of words in manual excerpts
+
+add_filter( 'get_the_excerpt', function( $excerpt, $post ) {
+	if ( has_excerpt( $post ) ) {
+		$excerpt_length = apply_filters( 'excerpt_length', 15 );
+		$excerpt_more   = apply_filters( 'excerpt_more', ' ' . '[&hellip;]' );
+		$excerpt        = wp_trim_words( $excerpt, $excerpt_length, $excerpt_more );
+	}
+	return $excerpt;
+  }, 10, 2 );
+
 // Owl carousel - Load JQuery
 
 add_action( 'wp_enqueue_scripts', 'tu_load_jquery' );
@@ -213,17 +144,6 @@ add_filter( 'generate_smooth_scroll_elements', function( $elements ) {
 	
 	return $elements;
   } );
-
-// GP -  Limit the number of words in manual excerpts
-
- add_filter( 'get_the_excerpt', function( $excerpt, $post ) {
-	if ( has_excerpt( $post ) ) {
-		$excerpt_length = apply_filters( 'excerpt_length', 15 );
-		$excerpt_more   = apply_filters( 'excerpt_more', ' ' . '[&hellip;]' );
-		$excerpt        = wp_trim_words( $excerpt, $excerpt_length, $excerpt_more );
-	}
-	return $excerpt;
-  }, 10, 2 );
 
 // CF7 - Redirect to thank-you page dynamically - Inject JavaScript into footer
 
