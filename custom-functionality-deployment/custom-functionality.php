@@ -3,18 +3,41 @@
 Plugin Name: webGefährte Custom Functionality Plugin
 Description: The Custom Functionality Plugin (CFP) extends WordPress sites with custom post types, new shortcodes or custom widgets w/o the using multiple 3rd-party plugins.
 
-Version: 1.5.1
+Version: 1.6.0
 Author: Jan (webGefährte)
 */
 
+/* wG - Add support better page-speed performance (rendering blocking resources) */ 
 
-/* wG - Registers custom fields for posts, pages, and podcast.
- * Fields include: wg_h1_title, wg_div_tagline, and wg_button_cta.
- * wg_button_cta contains two sub-fields: button text and URL link.
- */
+// Function to add async attribute to scripts
+function cfp_async_scripts($tag, $handle, $src) {
+    if (is_admin()) {
+        return $tag;
+    }
+    // Add async attribute to all scripts except jQuery
+    if ('jquery' !== $handle) {
+        return str_replace(' src', ' async="async" src', $tag);
+    }
+    return $tag;
+}
+add_filter('script_loader_tag', 'cfp_async_scripts', 10, 3);
+
+// Function to add defer attribute to scripts
+function cfp_defer_scripts($tag, $handle, $src) {
+    if (is_admin()) {
+        return $tag;
+    }
+    // Add defer attribute to all scripts except jQuery
+    if ('jquery' !== $handle) {
+        return str_replace(' src', ' defer="defer" src', $tag);
+    }
+    return $tag;
+}
+add_filter('script_loader_tag', 'cfp_defer_scripts', 10, 3);
+
+/* wG - Registers custom fields for posts, pages, and podcast. */
  
- // Add meta boxes for custom fields
- function wg_register_custom_fields() {
+function wg_register_custom_fields() {
     add_meta_box(
         'wg_fieldgroup_header', // ID of the metabox
         'wG Fieldgroup Header', // Title of the metabox
@@ -26,9 +49,8 @@ Author: Jan (webGefährte)
 }
 add_action('add_meta_boxes', 'wg_register_custom_fields');
 
-/**
- * Display the custom fields in the metabox.
- */
+// Display the custom fields in the metabox.
+
 function wg_display_custom_fields($post) {
     // Retrieve the saved values
     $wg_h1_title = get_post_meta($post->ID, 'wg_h1_title', true);
@@ -40,25 +62,29 @@ function wg_display_custom_fields($post) {
     ?>
     <p>
         <label for="wg_h1_title">Title (H1)</label>
-        <input type="text" name="wg_h1_title" id="wg_h1_title" value="<?php echo esc_attr($wg_h1_title ?: 'Fokus-Keyphrase: spannender Bezugstext'); ?>" />
+        <input type="text" name="wg_h1_title" id="wg_h1_title" value="<?php echo esc_attr($wg_h1_title ?: 'Fokus-Keyphrase: spannender Bezugstext'); ?>"
+            maxlength="60" style="width: 100%;" />
         <br />
-        <span>Main headline for the page or post</span>
+        <span>Main headline for the page or post (Max 60 characters)</span>
     </p>
     <p>
         <label for="wg_div_tagline">Tagline</label>
-        <input type="text" name="wg_div_tagline" id="wg_div_tagline" value="<?php echo esc_attr($wg_div_tagline); ?>" />
+        <input type="text" name="wg_div_tagline" id="wg_div_tagline" value="<?php echo esc_attr($wg_div_tagline); ?>"
+            maxlength="60" style="width: 100%;" />
         <br />
-        <span>Tagline above the main headline</span>
+        <span>Tagline above the main headline (Max 60 characters)</span>
     </p>
     <p>
         <label for="wg_button_cta_text">CTA Button Text</label>
-        <input type="text" name="wg_button_cta_text" id="wg_button_cta_text" value="<?php echo esc_attr($wg_button_cta_text); ?>" />
+        <input type="text" name="wg_button_cta_text" id="wg_button_cta_text" value="<?php echo esc_attr($wg_button_cta_text); ?>"
+            maxlength="60" style="width: 100%;" />
     </p>
     <p>
         <label for="wg_button_cta_url">CTA Button URL</label>
-        <input type="url" name="wg_button_cta_url" id="wg_button_cta_url" value="<?php echo esc_attr($wg_button_cta_url); ?>" />
+        <input type="url" name="wg_button_cta_url" id="wg_button_cta_url" value="<?php echo esc_attr($wg_button_cta_url); ?>"
+            maxlength="60" style="width: 100%;" />
         <br />
-        <span>Primary call-to-action for the user</span>
+        <span>Primary call-to-action for the user (Max 60 characters)</span>
     </p>
     <?php
 }
@@ -91,9 +117,21 @@ add_filter( 'generate_smooth_scroll_elements', function( $elements ) {
     return $elements;
 } );
 
+/* wG - Support local Fonts */
+
+// GP - Activate local fonts in editor
+ add_filter( 'block_editor_settings_all', function( $editor_settings ) {
+    $css = wp_get_custom_css_post()->post_content;
+    $editor_settings['styles'][] = array( 'css' => $css );
+
+    return $editor_settings;
+} );
+
 // MailPoet - Disable Google Fonts
 
 add_filter('mailpoet_display_custom_fonts', function () {return false;});
+
+/* wG - Customize excerpts */
 
 // WP - Activate Excerpt for pages
 
@@ -123,12 +161,16 @@ add_filter( 'get_the_excerpt', function( $excerpt, $post ) {
 	return $excerpt;
   }, 10, 2 );
 
+/* wG - Add Support for carousels */
+
 // Owl carousel - Load JQuery
 
 add_action( 'wp_enqueue_scripts', 'tu_load_jquery' );
 function tu_load_jquery() {
     wp_enqueue_script( 'jquery' );
 }; 
+
+/* wG - Add Support for smooth scrolling */
 
 // GP - Edit smooth-scroll
 
@@ -144,6 +186,8 @@ add_filter( 'generate_smooth_scroll_elements', function( $elements ) {
 	
 	return $elements;
   } );
+
+/* wG - Customize Contact Form 7 */
 
 // CF7 - Redirect to thank-you page dynamically - Inject JavaScript into footer
 

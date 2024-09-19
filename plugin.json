@@ -55,7 +55,7 @@
 	<p>Version 1.4.3: Adds tag support for pages in Wordpress. Bug fixing and code cleanup.</p>
 	<p>Version 1.5.0: Adds custom fields for post and page header via GeneratePress theme elements.</p>
 	<p>Version 1.5.1: Adds custom field support for podcast CPT and code commentary in EN.</p>
-	
+	<p>Version 1.6.1: Adds better page-speed performance (rendering blocking resources)</p>
 	", 
 
 	"rating": {
