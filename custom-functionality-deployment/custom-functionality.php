@@ -3,7 +3,7 @@
 Plugin Name: webGefährte Custom Functionality Plugin
 Description: The Custom Functionality Plugin (CFP) extends WordPress sites with custom post types, new shortcodes or custom widgets w/o the using multiple 3rd-party plugins.
 
-Version: 1.6.0
+Version: 1.6.1
 Author: Jan (webGefährte)
 */
 
@@ -398,6 +398,47 @@ function show_tag_descriptions() {
 require 'includes/plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5p4\PucFactory;
 
+// Test the connection to GitHub
+$response = wp_remote_get('https://api.github.com/repos/locke85/wG-2.0-CFP/releases/latest');
+if (is_wp_error($response)) {
+    error_log('Failed to connect to GitHub: ' . $response->get_error_message());
+} else {
+    error_log('Successfully connected to GitHub');
+}
+
+// Optional: Set the branch that contains the stable release.
+$updateChecker->setBranch('main');
+
+// Enable release assets
+$updateChecker->getVcsApi()->enableReleaseAssets();
+
+// Add debug information
+add_filter('puc_request_info_result-custom-functionality-deployment', 'cfp_debug_update_info', 10, 2);
+function cfp_debug_update_info($info, $httpResponse) {
+    if (is_wp_error($httpResponse)) {
+        error_log('Update check failed: ' . $httpResponse->get_error_message());
+    } else {
+        error_log('Update check succeeded. Response: ' . print_r($info, true));
+    }
+    return $info;
+}
+
+add_filter('upgrader_package_options', 'cfp_debug_package_options', 10, 1);
+function cfp_debug_package_options($options) {
+    error_log('Package options: ' . print_r($options, true));
+    return $options;
+}
+
+add_action('upgrader_process_complete', 'cfp_debug_upgrade_process', 10, 2);
+function cfp_debug_upgrade_process($upgrader, $hook_extra) {
+    error_log('Upgrade process complete. Hook extra: ' . print_r($hook_extra, true));
+    if (isset($upgrader->skin->result) && is_wp_error($upgrader->skin->result)) {
+        error_log('Upgrade failed: ' . $upgrader->skin->result->get_error_message());
+    } else {
+        error_log('Upgrade succeeded.');
+    }
+}
+
 // Create the update checker instance
 $updateChecker = PucFactory::buildUpdateChecker(
     'https://github.com/locke85/wG-2.0-CFP/',
@@ -405,11 +446,7 @@ $updateChecker = PucFactory::buildUpdateChecker(
     'custom-functionality-deployment' // Unique-plugin-slug
 );
 
-// Optional: Set the branch that contains the stable release.
-$updateChecker->setBranch('main');
 
-// Enable release assets
-$updateChecker->getVcsApi()->enableReleaseAssets();
 
 // Optional: If you're using a private repository, specify the access token like this:
 // $updateChecker->setAuthentication('your-token-here');

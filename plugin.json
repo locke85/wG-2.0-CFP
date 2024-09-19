@@ -47,15 +47,16 @@
 	"changelog": "
 	
 	<p>Version 1.0.0: Initial release with Glossary features.</p>
-	<p>Version 1.1.0: Added tag basis to breadcrumb.</p>
-	<p>Version 1.2.0: Added plugin update checker functionality.</p>
-	<p>Version 1.3.0: Added contact form and recaptcha features.</p>
-	<p>Version 1.4.1: Add smooth-scroll, disable Google Fonts, Add slider features.</p>
+	<p>Version 1.1.0: Adds tag basis to breadcrumb.</p>
+	<p>Version 1.2.0: Adds plugin update checker functionality.</p>
+	<p>Version 1.3.0: Adds contact form and recaptcha features.</p>
+	<p>Version 1.4.1: Adds smooth-scroll, disable Google Fonts, Add slider features.</p>
 	<p>Version 1.4.2: Adds Tooltip for glossary feature.</p>
 	<p>Version 1.4.3: Adds tag support for pages in Wordpress. Bug fixing and code cleanup.</p>
 	<p>Version 1.5.0: Adds custom fields for post and page header via GeneratePress theme elements.</p>
 	<p>Version 1.5.1: Adds custom field support for podcast CPT and code commentary in EN.</p>
-	<p>Version 1.6.1: Adds better page-speed performance (rendering blocking resources)</p>
+	<p>Version 1.6.0: Adds better page-speed performance (rendering blocking resources).</p>
+	<p>Version 1.6.1: Bug fixes for plugin release update.</p>
 	", 
 
 	"rating": {
