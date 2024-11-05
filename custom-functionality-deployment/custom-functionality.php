@@ -3,7 +3,7 @@
 Plugin Name: webGefährte Custom Functionality Plugin
 Description: The Custom Functionality Plugin (CFP) extends WordPress sites with custom post types, new shortcodes or custom widgets w/o the using multiple 3rd-party plugins.
 
-Version: 1.6.1
+Version: 1.6.3
 Author: Jan (webGefährte)
 */
 
@@ -15,7 +15,7 @@ function cfp_async_scripts($tag, $handle, $src) {
         return $tag;
     }
     // Add async attribute to all scripts except jQuery
-    if ('jquery' !== $handle) {
+    if ('jquery' !== $handle && $src) {
         return str_replace(' src', ' async="async" src', $tag);
     }
     return $tag;
@@ -28,7 +28,7 @@ function cfp_defer_scripts($tag, $handle, $src) {
         return $tag;
     }
     // Add defer attribute to all scripts except jQuery
-    if ('jquery' !== $handle) {
+    if ('jquery' !== $handle && $src) {
         return str_replace(' src', ' defer="defer" src', $tag);
     }
     return $tag;
@@ -50,13 +50,15 @@ function wg_register_custom_fields() {
 add_action('add_meta_boxes', 'wg_register_custom_fields');
 
 // Display the custom fields in the metabox.
-
 function wg_display_custom_fields($post) {
     // Retrieve the saved values
     $wg_h1_title = get_post_meta($post->ID, 'wg_h1_title', true);
     $wg_div_tagline = get_post_meta($post->ID, 'wg_div_tagline', true);
     $wg_button_cta_text = get_post_meta($post->ID, 'wg_button_cta_text', true);
     $wg_button_cta_url = get_post_meta($post->ID, 'wg_button_cta_url', true);
+
+    // Add nonce for security and authentication.
+    wp_nonce_field('wg_custom_fields', 'wg_custom_fields_nonce');
 
     // Display the fields
     ?>
@@ -84,31 +86,52 @@ function wg_display_custom_fields($post) {
         <input type="url" name="wg_button_cta_url" id="wg_button_cta_url" value="<?php echo esc_attr($wg_button_cta_url); ?>"
             maxlength="60" style="width: 100%;" />
         <br />
-        <span>Primary call-to-action for the user (Max 60 characters)</span>
     </p>
     <?php
 }
 
-/**
- * Save custom fields data.
- */
+// Save the custom fields
 function wg_save_custom_fields($post_id) {
-    // Save the data
-    if (array_key_exists('wg_h1_title', $_POST)) {
-        update_post_meta($post_id, 'wg_h1_title', sanitize_text_field($_POST['wg_h1_title']));
+    // Check if our nonce is set.
+    if (!isset($_POST['wg_custom_fields_nonce'])) {
+        return $post_id;
     }
-    if (array_key_exists('wg_div_tagline', $_POST)) {
-        update_post_meta($post_id, 'wg_div_tagline', sanitize_text_field($_POST['wg_div_tagline']));
+    $nonce = $_POST['wg_custom_fields_nonce'];
+
+    // Verify that the nonce is valid.
+    if (!wp_verify_nonce($nonce, 'wg_custom_fields')) {
+        return $post_id;
     }
-    if (array_key_exists('wg_button_cta_text', $_POST)) {
-        update_post_meta($post_id, 'wg_button_cta_text', sanitize_text_field($_POST['wg_button_cta_text']));
+
+    // If this is an autosave, our form has not been submitted, so we don't want to do anything.
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return $post_id;
     }
-    if (array_key_exists('wg_button_cta_url', $_POST)) {
-        update_post_meta($post_id, 'wg_button_cta_url', esc_url_raw($_POST['wg_button_cta_url']));
+
+    // Check the user's permissions.
+    if ('page' == $_POST['post_type']) {
+        if (!current_user_can('edit_page', $post_id)) {
+            return $post_id;
+        }
+    } else {
+        if (!current_user_can('edit_post', $post_id)) {
+            return $post_id;
+        }
     }
+
+    // Sanitize user input.
+    $wg_h1_title = isset($_POST['wg_h1_title']) ? sanitize_text_field($_POST['wg_h1_title']) : '';
+    $wg_div_tagline = isset($_POST['wg_div_tagline']) ? sanitize_text_field($_POST['wg_div_tagline']) : '';
+    $wg_button_cta_text = isset($_POST['wg_button_cta_text']) ? sanitize_text_field($_POST['wg_button_cta_text']) : '';
+    $wg_button_cta_url = isset($_POST['wg_button_cta_url']) ? esc_url_raw($_POST['wg_button_cta_url']) : '';
+
+    // Update the meta field in the database.
+    update_post_meta($post_id, 'wg_h1_title', $wg_h1_title);
+    update_post_meta($post_id, 'wg_div_tagline', $wg_div_tagline);
+    update_post_meta($post_id, 'wg_button_cta_text', $wg_button_cta_text);
+    update_post_meta($post_id, 'wg_button_cta_url', $wg_button_cta_url);
 }
 add_action('save_post', 'wg_save_custom_fields');
-
 // GP - Activate smooth-scroll to all page internal links 
 
 add_filter( 'generate_smooth_scroll_elements', function( $elements ) {
@@ -392,61 +415,20 @@ function show_tag_descriptions() {
   }
   add_shortcode('show_tag_descriptions', 'show_tag_descriptions_shortcode');  
 
-// WG - Add plugin update checker for GitHub
-
-// Include the plugin update checker library
-require 'includes/plugin-update-checker/plugin-update-checker.php';
-use YahnisElsts\PluginUpdateChecker\v5p4\PucFactory;
-
-// Test the connection to GitHub
-$response = wp_remote_get('https://api.github.com/repos/locke85/wG-2.0-CFP/releases/latest');
-if (is_wp_error($response)) {
-    error_log('Failed to connect to GitHub: ' . $response->get_error_message());
-} else {
-    error_log('Successfully connected to GitHub');
-}
-
-// Optional: Set the branch that contains the stable release.
-$updateChecker->setBranch('main');
-
-// Enable release assets
-$updateChecker->getVcsApi()->enableReleaseAssets();
-
-// Add debug information
-add_filter('puc_request_info_result-custom-functionality-deployment', 'cfp_debug_update_info', 10, 2);
-function cfp_debug_update_info($info, $httpResponse) {
-    if (is_wp_error($httpResponse)) {
-        error_log('Update check failed: ' . $httpResponse->get_error_message());
-    } else {
-        error_log('Update check succeeded. Response: ' . print_r($info, true));
-    }
-    return $info;
-}
-
-add_filter('upgrader_package_options', 'cfp_debug_package_options', 10, 1);
-function cfp_debug_package_options($options) {
-    error_log('Package options: ' . print_r($options, true));
-    return $options;
-}
-
-add_action('upgrader_process_complete', 'cfp_debug_upgrade_process', 10, 2);
-function cfp_debug_upgrade_process($upgrader, $hook_extra) {
-    error_log('Upgrade process complete. Hook extra: ' . print_r($hook_extra, true));
-    if (isset($upgrader->skin->result) && is_wp_error($upgrader->skin->result)) {
-        error_log('Upgrade failed: ' . $upgrader->skin->result->get_error_message());
-    } else {
-        error_log('Upgrade succeeded.');
-    }
-}
-
-// Create the update checker instance
-$updateChecker = PucFactory::buildUpdateChecker(
-    'https://github.com/locke85/wG-2.0-CFP/',
-    __FILE__, //Full path to the main plugin file.
-    'custom-functionality-deployment' // Unique-plugin-slug
-);
-
-
-
-// Optional: If you're using a private repository, specify the access token like this:
-// $updateChecker->setAuthentication('your-token-here');
+  // Seriously Simple Podcasting - Adds support for revisions to the custom post type "podcast".
+  add_filter( 'ssp_register_post_type_args', function ( $args ) {
+      // Debugging: Log the current supports array before modification
+      if ( isset( $args['supports'] ) && is_array( $args['supports'] ) ) {
+          error_log( 'Current supports for podcast before modification: ' . implode( ', ', $args['supports'] ) );
+      } else {
+          error_log( 'Supports array not found or not an array before modification.' );
+      }
+  
+      // Add support for revisions
+      $args['supports'][] = 'revisions';
+  
+      // Debugging: Log the updated supports array after modification
+      error_log( 'Updated supports for podcast after modification: ' . implode( ', ', $args['supports'] ) );
+  
+      return $args;
+  } );

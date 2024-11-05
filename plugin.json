@@ -57,6 +57,8 @@
 	<p>Version 1.5.1: Adds custom field support for podcast CPT and code commentary in EN.</p>
 	<p>Version 1.6.0: Adds better page-speed performance (rendering blocking resources).</p>
 	<p>Version 1.6.1: Bug fixes for plugin release update.</p>
+	<p>Version 1.6.2: Extend field length for H1.</p>
+	<p>Version 1.6.3: Bug fix regarding join-method.</p>
 	", 
 
 	"rating": {
