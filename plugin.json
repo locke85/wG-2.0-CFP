@@ -1,71 +1,39 @@
 {
-	"name": "webGefährte Custom Functionality Plugin",
-	"version": "1.5.1",
-	"download_url": "https://github.com/locke85/wG-2.0-CFP/blob/main/custom-functionality-deployment.zip",
+  "name": "webGefährte Custom Functionality Plugin",
+  "version": "1.7.0",
+  "download_url": "https://raw.githubusercontent.com/locke85/wG-2.0-CFP/main/custom-functionality-deployment.zip",
+  "homepage": "https://webgefaehrte.de/",
+  "requires": "5.8",
+  "tested": "6.5",
+  "last_updated": "2026-04-30 00:00:00",
+  "upgrade_notice": "Cleans up CFP scope boundaries and adds safer ratgeber permalinks.",
 
-	"homepage": "https://webgefaehrte.de/",
-	"requires": "4.5",
-	"tested": "4.8",
-	"last_updated": "2024-08-22 16:17:00",
-	"upgrade_notice": "Syncs custom functionality across websites of the online marketing community.",
+  "author": "Jan (webGefährte)",
+  "author_homepage": "https://webgefaehrte.de/author/locke85/",
 
-	"author": "Jan (webGefährte)",
-	"author_homepage": "https://webgefaehrte.de/author/locke85/",
+  "sections": {
+    "description": "<p><strong>webGefährte Custom Functionality Plugin</strong> centralizes shared website functionality across multiple WordPress installations. It provides reusable features such as custom fields, shortcodes, GeneratePress helpers, SMTP configuration and editorial enhancements without mixing in membership-specific logic.</p><ul><li>Custom fields for posts, pages and supported CPTs</li><li>Shortcodes (TOC, reading time, glossary)</li><li>GeneratePress enhancements</li><li>Scoped Contact Form 7 redirect handling</li><li>SMTP configuration support</li><li>Ratgeber permalink support for posts</li></ul>",
 
-	"sections": {
-		"description": "<strong>Custom Functionality Plugin</strong> enhances websites of members with a set of custom features and functions. This plugin is designed to be a flexible and robust solution for adding custom code, improving site performance, and extending theme functionality.</p><p>Key features include:</p><ul><li>Custom post types and taxonomies</li><li>Shortcodes for dynamic content</li><li>Enhanced security features</li><li>Custom widget and sidebar management</li></ul>",
-		"installation": "<p>To install the <strong>Custom Functionality Plugin</strong>, follow these steps:</p><ol><li>Download the latest version of the plugin from the repository.</li><li>Navigate to <code>Plugins > Add New</code> in your WordPress dashboard.</li><li>Click on <code>Upload Plugin</code> and select the downloaded ZIP file.</li><li>Click <code>Install Now</code>, then <code>Activate</code> the plugin.</li><li>Optional: Configure the plugin settings according to your needs in the <code>Settings > Custom Functionality</code> menu.</li></ol>",
-		"changelog": "<p><strong>Version 1.2.1</strong> - Released on 2024-08-22</p><ul><li>Added new glossar features'</li><li>Added Tag description for pages</li><li>Fixed bug with update checker</li></ul><p><strong>Version 1.0.0</strong> - Initial Release</p><ul><li>Introduced basic custom functionality features</li><li>Implemented custom widgets</li><li>Added shortcode support for dynamic content</li></ul>",
-		"custom_section": "<h3>Custom Section: Advanced Configuration</h3><p>This section provides advanced configuration options for developers. You can customize the behavior of this plugin by using filters and action hooks. For detailed documentation, please refer to the <a href='https://github.com/locke85/webgefaehrte/tree/main/docs'>official documentation</a>.</p><p>Example usage:</p><pre><code>add_filter('custom_functionality_option', function($value) { return 'new_value'; });</code></pre>"
-	},
-	
-	"icons" : {
-		"1x" : "https://github.com/locke85/wG-2.0-CFP/tree/main/custom-functionality-deployment/assets/icon-128x128.png",
-		"2x" : "https://github.com/locke85/wG-2.0-CFP/tree/main/custom-functionality-deployment/assets/icon-256x256.png"
-    },
+    "installation": "<ol><li>Download the latest ZIP package.</li><li>Go to <code>Plugins → Add New → Upload Plugin</code>.</li><li>Upload and install the ZIP file.</li><li>Activate the plugin.</li></ol>",
 
-	"banners": {
-		"low": "https://github.com/locke85/wG-2.0-CFP/tree/main/custom-functionality-deployment/assets/banner-772x250.png",
-		"high": "https://github.com/locke85/wG-2.0-CFP/tree/main/custom-functionality-deployment/assets/banner-1544x500.png"
-	},
+    "changelog": "<h4>1.7.0</h4><ul><li>Removed membership-specific <code>wg_angebot</code> author support from CFP</li><li>Deduplicated page excerpt support and hardened metabox saving</li><li>Scoped Contact Form 7 redirects and decoupled Font Awesome from the child theme</li><li>Added ratgeber permalink support for posts with safer fallback behavior</li></ul><h4>1.6.9</h4><ul><li>Fixed fatal error caused by invalid save_post callback</li><li>Fixed conditional assignment bug</li><li>Improved PHP 8 compatibility</li></ul><h4>1.6.8</h4><ul><li>Added author support for pages and CPTs</li><li>Added author filter in admin lists</li></ul><h4>1.6.7</h4><ul><li>Added support for local Font Awesome icons</li></ul><h4>1.6.6</h4><ul><li>Added Table of Contents shortcode</li><li>Added estimated reading time shortcode</li></ul><h4>1.6.5</h4><ul><li>Added SMTP configuration via wp-config.php</li><li>Enabled excerpts for pages</li></ul><h4>1.6.4</h4><ul><li>Extended custom field lengths</li><li>Added CTA button tagline field</li></ul><h4>1.6.3</h4><ul><li>Bug fix related to join method</li></ul><h4>1.6.2</h4><ul><li>Extended H1 field length</li></ul><h4>1.6.1</h4><ul><li>Bug fixes for plugin update releases</li></ul><h4>1.6.0</h4><ul><li>Improved page speed and rendering performance</li></ul><h4>1.5.1</h4><ul><li>Added podcast CPT custom field support</li><li>Code documentation in English</li></ul><h4>1.5.0</h4><ul><li>Added custom header fields for posts and pages</li></ul><h4>1.4.3</h4><ul><li>Added tag support for pages</li><li>Bug fixes and cleanup</li></ul><h4>1.4.2</h4><ul><li>Added glossary tooltip support</li></ul><h4>1.4.1</h4><ul><li>Added smooth scroll and slider support</li><li>Disabled Google Fonts loading</li></ul><h4>1.3.0</h4><ul><li>Added Contact Form 7 customization and reCAPTCHA support</li></ul><h4>1.2.0</h4><ul><li>Added plugin update checker</li></ul><h4>1.1.0</h4><ul><li>Added tag base to breadcrumbs</li></ul><h4>1.0.0</h4><ul><li>Initial release with glossary features</li></ul>"
+  },
 
-	"translations": [
-		{
-			"language": "en_EN",
-			"version": "1.0",
-			"updated": "2024-08-22 23:22:42",
-			"package": "https://github.com/locke85/wG-2.0-CFP/tree/main/custom-functionality-deployment/languages/custom-functionality.pot"
-		},
-		{
-			"language": "de_DE",
-			"version": "1.0",
-			"updated": "2024-08-22 23:22:42",
-			"package": "https://github.com/locke85/wG-2.0-CFP/tree/main/custom-functionality-deployment/languages/custom-functionality-de_DE.po"
-		}
-	],
+  "icons": {
+    "1x": "https://raw.githubusercontent.com/locke85/wG-2.0-CFP/main/custom-functionality-deployment/assets/icon-128x128.png",
+    "2x": "https://raw.githubusercontent.com/locke85/wG-2.0-CFP/main/custom-functionality-deployment/assets/icon-256x256.png"
+  },
 
-	"changelog": "
-	
-	<p>Version 1.0.0: Initial release with Glossary features.</p>
-	<p>Version 1.1.0: Adds tag basis to breadcrumb.</p>
-	<p>Version 1.2.0: Adds plugin update checker functionality.</p>
-	<p>Version 1.3.0: Adds contact form and recaptcha features.</p>
-	<p>Version 1.4.1: Adds smooth-scroll, disable Google Fonts, Add slider features.</p>
-	<p>Version 1.4.2: Adds Tooltip for glossary feature.</p>
-	<p>Version 1.4.3: Adds tag support for pages in Wordpress. Bug fixing and code cleanup.</p>
-	<p>Version 1.5.0: Adds custom fields for post and page header via GeneratePress theme elements.</p>
-	<p>Version 1.5.1: Adds custom field support for podcast CPT and code commentary in EN.</p>
-	<p>Version 1.6.0: Adds better page-speed performance (rendering blocking resources).</p>
-	<p>Version 1.6.1: Bug fixes for plugin release update.</p>
-	<p>Version 1.6.2: Extend field length for H1.</p>
-	<p>Version 1.6.3: Bug fix regarding join-method.</p>
-	", 
+  "banners": {
+    "low": "https://raw.githubusercontent.com/locke85/wG-2.0-CFP/main/custom-functionality-deployment/assets/banner-772x250.png",
+    "high": "https://raw.githubusercontent.com/locke85/wG-2.0-CFP/main/custom-functionality-deployment/assets/banner-1544x500.png"
+  },
 
-	"rating": {
-        "rating": "5",
-        "num_ratings": 150
-    },
-	
-	"downloaded": 4,
-	"active_installs": 3
+  "rating": {
+    "rating": "5",
+    "num_ratings": 150
+  },
+
+  "downloaded": 4,
+  "active_installs": 3
 }

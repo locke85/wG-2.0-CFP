@@ -1,61 +1,87 @@
-# Custom Functionality Plugin
+# webGefaehrte Custom Functionality Plugin
 
-[![WordPress Version](https://img.shields.io/badge/WordPress-5.6%2B-blue)](https://wordpress.org)
-[![License](https://img.shields.io/badge/license-GPLv2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
-[![Version](https://img.shields.io/github/v/release/locke85/webgefaehrte)](https://github.com/locke85/webgefaehrte/releases)
+## Zweck
 
-## Description
+Das CFP ist das gruppenweite Standard-Plugin fuer allgemeine Website-Funktionalitaet, die nicht zum WordPress-Core gehoert und nicht in die `functions.php` einzelner Websites verlagert werden soll.
 
-The **Custom Functionality Plugin** is designed to extend your WordPress site with custom features tailored to your needs. Whether you want to create custom post types, add new shortcodes, or manage custom widgets, this plugin provides a flexible and extendable platform.
+## Abgrenzung
 
-### Key Features
+- `CFP`: allgemeine Website-Funktionalitaet wie Page Excerpts, TOC, H2-Anker, Lesezeit, Header-/CTA-Metaboxen, SMTP per Konstanten, GeneratePress-/GenerateBlocks-nahe Helfer, Yoast-/MailPoet-/SSP-Helfer, Tags fuer Pages, Glossar-Shortcodes, FontAwesome-Bereitstellung, scoped CF7-Redirects.
+- `wg-membership-suite`: Membership, Checkout, LMS, Login, 2FA, Bestellungen, Membership-CPTs und zugehoerige Rollen-/Kompatibilitaetslogik.
+- `functions.php`: website-spezifische Einzelfaelle.
 
-- Create and manage custom post types and taxonomies.
-- Add dynamic content using shortcodes.
-- Develop custom widgets for your theme.
-- Easily configurable and extendable through hooks and filters.
-- Centralized management of custom functionalities across multiple sites.
+`wg_angebot` Author-Support liegt nicht im CFP.
 
-## Installation
+## Bereitgestellte Funktionen
 
-1. **Download the Plugin**: Clone the repository or download the ZIP file from the [releases page](https://github.com/locke85/webgefaehrte/releases).
-2. **Upload to WordPress**: Upload the `custom-functionality-deployment` folder to the `/wp-content/plugins/` directory.
-3. **Activate**: Activate the plugin through the 'Plugins' menu in WordPress.
-4. **Configure**: Go to `Settings > Custom Functionality` to configure the plugin.
+- Page Excerpts fuer `page`.
+- TOC-Shortcode `toc`.
+- H2-Anker im Content.
+- Lesezeit-Shortcode `lesezeit`.
+- Header-/CTA-Metaboxen mit den bestehenden Meta Keys:
+  `wg_h1_title`, `wg_div_tagline`, `wg_button_cta_text`, `wg_button_cta_url`, `wg_button_cta_tagline`.
+- SMTP-Konfiguration nur ueber `wp-config.php`-Konstanten.
+- Tags fuer Pages inklusive Tag-Archiv-Erweiterung.
+- Shortcodes `list_terms` und `show_tag_descriptions`.
+- Yoast-Breadcrumb-Anpassung fuer Tag-Archive.
+- SSP-Helfer fuer Revisions-Support beim `podcast`-Post-Type.
 
-## Configuration
+## CF7-Redirect
 
-To configure the plugin, you can edit the settings directly within WordPress or extend its functionality via the `functions.php` file in your theme or a custom functionality plugin.
+Der Redirect fuer Contact Form 7 ist scoped und filterbar.
 
-### Custom Post Types and Taxonomies
+- Filter `wg_cfp_cf7_redirect_form_ids`: Liste erlaubter Formular-IDs. Default ist `[]`.
+- Filter `wg_cfp_cf7_thank_you_url`: Ziel-URL. Default ist `home_url('/kontakt/danke')`.
 
-To add custom post types and taxonomies, use the plugin's settings page or define them in your theme's `functions.php` file.
+Verhalten:
 
-### Shortcodes
+- Wenn Formular-IDs gesetzt sind, redirecten nur diese Formulare.
+- Wenn keine Formular-IDs gesetzt sind, redirectet nur das Formular auf `/kontakt` bzw. `/kontakt/`.
+- Ohne Formular-ID-Whitelist greift der Fallback nur auf `/kontakt` bzw. `/kontakt/`.
+- Fuer abweichende Kontaktseiten sollen `wg_cfp_cf7_redirect_form_ids` oder `wg_cfp_cf7_thank_you_url` genutzt werden.
+- Checkout- und Multi-Step-Formulare werden dadurch nicht global umgeleitet.
 
-Create custom shortcodes by defining them in the plugin settings or within your theme.
+## FontAwesome
 
-### Widgets
+FontAwesome ist vom Theme entkoppelt und filterbar.
 
-Develop custom widgets by extending the base widget class provided by the plugin.
+- Default-Pfad: `assets/fontawesome/css/all.css` innerhalb des Plugins.
+- Filter `wg_cfp_fontawesome_url`: ueberschreibt die Asset-URL.
+- Filter `wg_cfp_load_fontawesome`: aktiviert/deaktiviert das Laden.
 
-## Changelog
+Wenn keine Datei vorhanden ist und kein Filter eine URL liefert, wird FontAwesome sauber nicht geladen.
 
-### 1.0.0
-- Initial release with core functionality for post types, shortcodes, and widgets.
+## Ratgeber-Permalinks
 
-## Contributing
+Das CFP kann fuer Beitraege die URL-Struktur `/ratgeber/{kategorie}/{post-name}/` bereitstellen.
 
-Contributions are welcome! Please read our [contributing guidelines](CONTRIBUTING.md) for more details.
+- Empfohlen ist eine Permalinkstruktur mit `%category%`, z. B. `/%category%/%postname%/`.
+- Das CFP ersetzt `%category%` durch `ratgeber/{kategorie}`.
+- Wenn keine `%category%`-Struktur verwendet wird, werden Permalinks standardmaessig nicht ueberschrieben.
+- Filter `wg_cfp_ratgeber_permalink_base`: aendert den Basis-Slug. Default ist `ratgeber`.
+- Filter `wg_cfp_enable_ratgeber_permalinks`: aktiviert/deaktiviert das Feature. Default ist `true`.
+- Filter `wg_cfp_ratgeber_force_permalink_without_category_placeholder`: optionales Erzwingen ohne `%category%`. Default ist `false`.
 
-## License
+Nach Aktivierung oder nach Aenderung des Basis-Slugs muessen die Permalinks einmal in WordPress gespeichert werden, damit die Rewrite Rule aktiv ist.
 
-This plugin is licensed under the [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html). See the `LICENSE` file for more details.
+## Manuelle Tests
 
-## Support
-
-For support, please open an issue on the [GitHub issues page](https://github.com/locke85/webgefaehrte/issues).
-
-## Acknowledgements
-
-This plugin was developed using the [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker) library by Yahnis Elsts.
+- CFP aktiv ohne `wg-membership-suite`.
+- CFP aktiv mit `wg-membership-suite`.
+- Page Excerpts.
+- TOC.
+- H2-Anker.
+- Lesezeit-Shortcode.
+- Header-/CTA-Metabox speichern.
+- CF7-Kontaktformular redirectet.
+- CF7-Checkout/Multi-Step redirectet nicht.
+- FontAwesome laedt korrekt oder wird sauber uebersprungen.
+- Tags fuer Pages.
+- Yoast Tag-Breadcrumb.
+- `list_terms`.
+- `show_tag_descriptions`.
+- SMTP nur mit Konstanten.
+- GeneratePress Smooth Scroll.
+- Ratgeber-Permalinks fuer Posts.
+- Permalink-Flush nach Aktivierung oder Basis-Slug-Aenderung.
+- Keine PHP Notices im Debug Log.
