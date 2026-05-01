@@ -3,9 +3,29 @@
 Plugin Name: webGefährte Custom Functionality Plugin
 Description: The Custom Functionality Plugin (CFP) extends WordPress sites with custom post types, new shortcodes or custom widgets w/o the using multiple 3rd-party plugins.
 
-Version: 1.7.0
+Version: 2.0.0
 Author: Jan (webGefährte)
 */
+
+if ( ! function_exists( 'wg_cfp_load_module' ) ) {
+    function wg_cfp_load_module( $relative_path ) {
+        $module_path = __DIR__ . '/' . ltrim( $relative_path, '/' );
+
+        if ( file_exists( $module_path ) ) {
+            require_once $module_path;
+        }
+    }
+}
+
+if ( ! function_exists( 'wg_cfp_is_main_site_context' ) ) {
+    function wg_cfp_is_main_site_context() {
+        if ( ! is_multisite() ) {
+            return true;
+        }
+
+        return (int) get_current_blog_id() === (int) get_main_site_id();
+    }
+}
 
 // WP - Activate Drop down filter for authors on Posts and Pages
 
@@ -298,21 +318,51 @@ add_action( 'save_post', 'wg_plugin_save_custom_fields' );
 
 // GP - Activate smooth-scroll to all page internal links 
 
-add_filter( 'generate_smooth_scroll_elements', function( $elements ) {
-    $elements[] = 'a:not([data-gpmodal-trigger="gp-search"])[href*="#"]';
-    
-    return $elements;
-} );
+if ( ! function_exists( 'wg_cfp_register_smooth_scroll_elements' ) ) {
+    function wg_cfp_register_smooth_scroll_elements( $elements ) {
+        $elements[] = 'a:not([data-gpmodal-trigger="gp-search"])[href*="#"]';
+
+        return array_values( array_unique( $elements ) );
+    }
+}
+add_filter( 'generate_smooth_scroll_elements', 'wg_cfp_register_smooth_scroll_elements' );
 
 /* wG - Support local Fonts */
 
 // GP - Activate local fonts in editor
- add_filter( 'block_editor_settings_all', function( $editor_settings ) {
-    $css = wp_get_custom_css_post()->post_content;
-    $editor_settings['styles'][] = array( 'css' => $css );
+if ( ! function_exists( 'wg_cfp_add_custom_css_to_editor' ) ) {
+    function wg_cfp_add_custom_css_to_editor( $editor_settings ) {
+        $custom_css_post = wp_get_custom_css_post();
+        $css             = $custom_css_post && isset( $custom_css_post->post_content ) ? $custom_css_post->post_content : '';
 
-    return $editor_settings;
-} );
+        if ( '' !== $css ) {
+            $editor_settings['styles'][] = array( 'css' => $css );
+        }
+
+        return $editor_settings;
+    }
+}
+add_filter( 'block_editor_settings_all', 'wg_cfp_add_custom_css_to_editor' );
+
+if ( ! function_exists( 'wg_cfp_enable_generatepress_modal_script' ) ) {
+    function wg_cfp_enable_generatepress_modal_script( $enabled ) {
+        return true;
+    }
+}
+add_filter( 'generate_enable_modal_script', 'wg_cfp_enable_generatepress_modal_script' );
+
+if ( ! function_exists( 'wg_cfp_fix_generatepress_embeds' ) ) {
+    function wg_cfp_fix_generatepress_embeds( $content ) {
+        global $wp_embed;
+
+        if ( $wp_embed && is_object( $wp_embed ) && method_exists( $wp_embed, 'autoembed' ) ) {
+            return $wp_embed->autoembed( $content );
+        }
+
+        return $content;
+    }
+}
+add_filter( 'generate_do_block_element_content', 'wg_cfp_fix_generatepress_embeds' );
 
 // MailPoet - Disable Google Fonts
 
@@ -366,14 +416,6 @@ if ( ! function_exists( 'tu_smooth_scroll_duration' ) ) {
         return 1000; // milliseconds
     }
 }
-
-// GP - Apply smooth scroll to all hash links:
-
-add_filter( 'generate_smooth_scroll_elements', function( $elements ) {
-	$elements[] = 'a[href*="#"]';
-	
-	return $elements;
-  } );
 
 /* wG - Customize Contact Form 7 */
 
@@ -615,6 +657,36 @@ if ( ! function_exists( 'wg_cfp_add_ratgeber_rewrite_rule' ) ) {
 }
 add_action( 'init', 'wg_cfp_add_ratgeber_rewrite_rule' );
 
+if ( ! function_exists( 'wg_cfp_filter_ratgeber_pre_post_link' ) ) {
+    function wg_cfp_filter_ratgeber_pre_post_link( $permalink, $post, $leavename ) {
+        if ( ! wg_cfp_enable_ratgeber_permalinks() ) {
+            return $permalink;
+        }
+
+        if ( ! $post instanceof WP_Post || 'post' !== $post->post_type ) {
+            return $permalink;
+        }
+
+        if ( '' === wg_cfp_get_post_category_slug( $post->ID ) ) {
+            return $permalink;
+        }
+
+        if ( strpos( $permalink, '%category%' ) === false ) {
+            return $permalink;
+        }
+
+        $base                  = wg_cfp_get_ratgeber_permalink_base();
+        $normalized_permalink  = ltrim( $permalink, '/' );
+
+        if ( 0 === strpos( $normalized_permalink, $base . '/' ) ) {
+            return $permalink;
+        }
+
+        return str_replace( '%category%', $base . '/%category%', $permalink );
+    }
+}
+add_filter( 'pre_post_link', 'wg_cfp_filter_ratgeber_pre_post_link', 10, 3 );
+
 if ( ! function_exists( 'wg_cfp_filter_ratgeber_post_link' ) ) {
     function wg_cfp_filter_ratgeber_post_link( $permalink, $post ) {
         if ( ! wg_cfp_enable_ratgeber_permalinks() ) {
@@ -625,20 +697,16 @@ if ( ! function_exists( 'wg_cfp_filter_ratgeber_post_link' ) ) {
             return $permalink;
         }
 
+        if ( ! apply_filters( 'wg_cfp_ratgeber_force_permalink_without_category_placeholder', false ) ) {
+            return $permalink;
+        }
+
         $category_slug = wg_cfp_get_post_category_slug( $post->ID );
 
         if ( '' === $category_slug ) {
             return $permalink;
         }
-        $base          = wg_cfp_get_ratgeber_permalink_base();
-
-        if ( strpos( $permalink, '%category%' ) !== false ) {
-            return str_replace( '%category%', $base . '/' . $category_slug, $permalink );
-        }
-
-        if ( ! apply_filters( 'wg_cfp_ratgeber_force_permalink_without_category_placeholder', false ) ) {
-            return $permalink;
-        }
+        $base = wg_cfp_get_ratgeber_permalink_base();
 
         $path = wp_parse_url( $permalink, PHP_URL_PATH );
 
@@ -668,6 +736,12 @@ add_filter( 'ssp_register_post_type_args', function ( $args ) {
 
 	return $args;
 } );
+
+if ( wg_cfp_is_main_site_context() ) {
+    wg_cfp_load_module( 'includes/podcast-show-notes.php' );
+    wg_cfp_load_module( 'includes/chat-archives.php' );
+    wg_cfp_load_module( 'includes/user-profile-html.php' );
+}
 
 // WG - Add plugin update checker for GitHub
 

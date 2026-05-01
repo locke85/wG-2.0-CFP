@@ -20,11 +20,15 @@ Das CFP ist das gruppenweite Standard-Plugin fuer allgemeine Website-Funktionali
 - Lesezeit-Shortcode `lesezeit`.
 - Header-/CTA-Metaboxen mit den bestehenden Meta Keys:
   `wg_h1_title`, `wg_div_tagline`, `wg_button_cta_text`, `wg_button_cta_url`, `wg_button_cta_tagline`.
+- Podcast-Show-Notes-Metabox fuer `podcast` sowie der kompatible Gast-Shortcode `wg_guest`.
+- Chat-/Archiv-Helfer fuer `wg_seo_chat`, inklusive `display_post_type` und `chat_category_grid`.
 - SMTP-Konfiguration nur ueber `wp-config.php`-Konstanten.
 - Tags fuer Pages inklusive Tag-Archiv-Erweiterung.
 - Shortcodes `list_terms` und `show_tag_descriptions`.
+- GeneratePress-Helfer fuer Modal-Script, Embedded-Pages und sicheren Smooth Scroll.
 - Yoast-Breadcrumb-Anpassung fuer Tag-Archive.
 - SSP-Helfer fuer Revisions-Support beim `podcast`-Post-Type.
+- Optionales HTML in Benutzerprofil-Beschreibungen ueber `wg_cfp_allow_user_description_html` als Opt-in.
 
 ## CF7-Redirect
 
@@ -56,7 +60,7 @@ Wenn keine Datei vorhanden ist und kein Filter eine URL liefert, wird FontAwesom
 Das CFP kann fuer Beitraege die URL-Struktur `/ratgeber/{kategorie}/{post-name}/` bereitstellen.
 
 - Empfohlen ist eine Permalinkstruktur mit `%category%`, z. B. `/%category%/%postname%/`.
-- Das CFP ersetzt `%category%` durch `ratgeber/{kategorie}`.
+- Das CFP erweitert diese Struktur zu `/ratgeber/%category%/%postname%/` und WordPress ersetzt `%category%` anschliessend durch die Beitragskategorie.
 - Wenn keine `%category%`-Struktur verwendet wird, werden Permalinks standardmaessig nicht ueberschrieben.
 - Filter `wg_cfp_ratgeber_permalink_base`: aendert den Basis-Slug. Default ist `ratgeber`.
 - Filter `wg_cfp_enable_ratgeber_permalinks`: aktiviert/deaktiviert das Feature. Default ist `true`.
@@ -73,15 +77,23 @@ Nach Aktivierung oder nach Aenderung des Basis-Slugs muessen die Permalinks einm
 - H2-Anker.
 - Lesezeit-Shortcode.
 - Header-/CTA-Metabox speichern.
+- Podcast-Show-Notes-Metabox erscheint bei `podcast` und speichert Metadaten.
+- `[wg_guest field="display_name"]` funktioniert auf Podcast-Beitrag mit `wg_interviewgast`.
+- `[wg_guest field="wg_linkedin" link="1" label="LinkedIn" wrap="li"]` funktioniert.
+- `[display_post_type]` gibt das Singular Label aus.
+- `[chat_category_grid]` gibt Kategorien aus, falls Taxonomie vorhanden ist.
 - CF7-Kontaktformular redirectet.
 - CF7-Checkout/Multi-Step redirectet nicht.
 - FontAwesome laedt korrekt oder wird sauber uebersprungen.
 - Tags fuer Pages.
+- Tag-Archive enthalten erwartete Post Types, ohne bestehende Post Types zu ueberschreiben.
+- Author-Archive zeigen `wg_seo_chat`, falls der CPT existiert.
 - Yoast Tag-Breadcrumb.
 - `list_terms`.
 - `show_tag_descriptions`.
 - SMTP nur mit Konstanten.
 - GeneratePress Smooth Scroll.
 - Ratgeber-Permalinks fuer Posts.
+- Keine redeclared-function-Fehler oder doppelten Shortcode-Registrierungen.
 - Permalink-Flush nach Aktivierung oder Basis-Slug-Aenderung.
 - Keine PHP Notices im Debug Log.
