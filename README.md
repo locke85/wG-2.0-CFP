@@ -21,7 +21,9 @@ Das CFP ist das gruppenweite Standard-Plugin fuer allgemeine Website-Funktionali
 - Header-/CTA-Metaboxen mit den bestehenden Meta Keys:
   `wg_h1_title`, `wg_div_tagline`, `wg_button_cta_text`, `wg_button_cta_url`, `wg_button_cta_tagline`.
 - Podcast-Show-Notes-Metabox fuer `podcast` sowie der kompatible Gast-Shortcode `wg_guest`.
+- Hauptseitengebundene CPT-Module fuer `wg_seo_chat` und `wg_sharing_news`, inklusive gehärteter Admin-Metaboxen.
 - Chat-/Archiv-Helfer fuer `wg_seo_chat`, inklusive `display_post_type` und `chat_category_grid`.
+- Der kompatible Shortcode `wg_seo_chat_form` ist als schlanke Frontend-Erfassung nur fuer eingeloggte Redakteure verfuegbar und speichert Chats als `pending`.
 - SMTP-Konfiguration nur ueber `wp-config.php`-Konstanten.
 - Tags fuer Pages inklusive Tag-Archiv-Erweiterung.
 - Shortcodes `list_terms` und `show_tag_descriptions`.
@@ -29,6 +31,23 @@ Das CFP ist das gruppenweite Standard-Plugin fuer allgemeine Website-Funktionali
 - Yoast-Breadcrumb-Anpassung fuer Tag-Archive.
 - SSP-Helfer fuer Revisions-Support beim `podcast`-Post-Type.
 - Optionales HTML in Benutzerprofil-Beschreibungen ueber `wg_cfp_allow_user_description_html` als Opt-in.
+
+## Hauptseiten-Module
+
+Die folgenden Module werden nur im Hauptseiten-Kontext der Multisite geladen. Auf Single-Site-Installationen greift der vorhandene Fallback und laedt sie ebenfalls.
+
+- `wg_seo_chat` inklusive `wg_chat_category`, eigener Permalink-Struktur `/hilfe-chat/{kategorie}/{beitrag}/` und gehärteter Chat-Metabox.
+- `wg_sharing_news` inklusive gehärteter News-Metabox.
+- Podcast-Show-Notes, Chat-Archive und User-Profile-HTML.
+- Die Frontend-Erfassung `wg_seo_chat_form` nutzt einen nonce-geschuetzten `admin-post`-Workflow nur fuer eingeloggte Nutzer mit `edit_posts`.
+
+Bewusst nicht aus den Alt-Plugins uebernommen wurden:
+
+- das oeffentliche Chat-Formular samt AJAX-/Upload-Workflow,
+- Gast-Einreichungen,
+- Debug-Logs,
+- Theme-gebundene Admin-Assets,
+- die globale Tag-Rewrite-Umschreibung aus `wg-news-cpt`.
 
 ## CF7-Redirect
 

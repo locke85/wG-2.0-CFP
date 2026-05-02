@@ -59,15 +59,6 @@ if ( ! function_exists( 'wg_cfp_extend_author_archives_with_chat_post_type' ) ) 
 }
 add_action( 'pre_get_posts', 'wg_cfp_extend_author_archives_with_chat_post_type', 20 );
 
-if ( ! function_exists( 'wg_cfp_add_author_support_to_wg_seo_chat' ) ) {
-    function wg_cfp_add_author_support_to_wg_seo_chat() {
-        if ( post_type_exists( 'wg_seo_chat' ) ) {
-            add_post_type_support( 'wg_seo_chat', 'author' );
-        }
-    }
-}
-add_action( 'init', 'wg_cfp_add_author_support_to_wg_seo_chat', 20 );
-
 if ( ! function_exists( 'wg_cfp_display_post_type_shortcode' ) ) {
     function wg_cfp_display_post_type_shortcode() {
         $post_type = get_post_type();
