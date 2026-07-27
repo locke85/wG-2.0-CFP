@@ -1,5 +1,8 @@
 # webGefaehrte Custom Functionality Plugin
 
+Aktuelle Release-Version: `2.0.2`. Die vollständige Änderungshistorie steht in
+[`CHANGELOG.md`](CHANGELOG.md).
+
 ## Zweck
 
 Das CFP ist das gruppenweite Standard-Plugin fuer allgemeine Website-Funktionalitaet, die nicht zum WordPress-Core gehoert und nicht in die `functions.php` einzelner Websites verlagert werden soll.
@@ -31,6 +34,20 @@ Das CFP ist das gruppenweite Standard-Plugin fuer allgemeine Website-Funktionali
 - Yoast-Breadcrumb-Anpassung fuer Tag-Archive.
 - SSP-Helfer fuer Revisions-Support beim `podcast`-Post-Type.
 - Optionales HTML in Benutzerprofil-Beschreibungen ueber `wg_cfp_allow_user_description_html` als Opt-in.
+- Serverseitige GenerateBlocks-Fallbacks fuer Avatar, Anzeigename, Vorname und Nachname auf leeren Autorenarchiven.
+
+## Autorenarchive
+
+GenerateBlocks 2.x bezieht `author_meta` und `author_avatar_url` aus dem Autor des aktuellen Beitrags. Auf einem Autorenarchiv ohne Beitraege fehlt dieser Beitragskontext. Das CFP nutzt deshalb die serverseitigen GenerateBlocks-Filter `generateblocks_dynamic_tag_replacement` und `generateblocks_before_dynamic_tag_replace`.
+
+- Der Fallback greift ausschliesslich bei `is_author()` und einem gueltigen abgefragten `WP_User`.
+- Bereits vorhandene GenerateBlocks-Profildaten bleiben unveraendert; es wird nichts zusaetzlich ausgegeben. Ein fehlender Avatar-Alt-Text wird aus Gruenden der Barrierefreiheit auch bei bereits aufgeloesten Avatar-URLs ergaenzt.
+- Unterstuetzt werden `display_name`, `first_name`, `last_name` und `author_avatar_url`.
+- Der Avatar wird ueber `get_avatar_url()` aufgeloest. Dadurch bleiben Simple Local Avatars und Multisite-Avatare kompatibel.
+- Die Standardgroesse ist 150 Pixel. Sie kann per Konstante `WG_CFP_AUTHOR_ARCHIVE_AVATAR_SIZE` oder Filter `wg_cfp_author_archive_avatar_size` angepasst werden.
+- Der bestehende GenerateBlocks-Media-Block erhaelt beim Fallback einen Alt-Text mit dem Anzeigenamen.
+
+Shortcodes wurden bewusst nicht verwendet: Der vorhandene Element-Aufbau bleibt damit unveraendert, und die in GenerateBlocks 2.2.0 bereitgestellten PHP-Filter erlauben einen engeren, rein serverseitigen Eingriff. Element 48767 muss nicht geaendert werden.
 
 ## Hauptseiten-Module
 
@@ -107,6 +124,9 @@ Nach Aktivierung oder nach Aenderung des Basis-Slugs muessen die Permalinks einm
 - Tags fuer Pages.
 - Tag-Archive enthalten erwartete Post Types, ohne bestehende Post Types zu ueberschreiben.
 - Author-Archive zeigen `wg_seo_chat`, falls der CPT existiert.
+- Author-Archive ohne Beitraege rendern Avatar und Profildaten bereits im initialen HTML.
+- Author-Archive mit funktionierendem Beitragskontext enthalten keine doppelten Profildaten.
+- Avatar-URLs der Author-Archive liefern HTTP 200 mit einem Bild-Content-Type.
 - Yoast Tag-Breadcrumb.
 - `list_terms`.
 - `show_tag_descriptions`.

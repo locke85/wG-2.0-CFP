@@ -3,7 +3,7 @@
 Plugin Name: webGefährte Custom Functionality Plugin
 Description: The Custom Functionality Plugin (CFP) extends WordPress sites with custom post types, new shortcodes or custom widgets w/o the using multiple 3rd-party plugins.
 
-Version: 2.1.0
+Version: 2.0.2
 Author: Jan (webGefährte)
 */
 
@@ -399,9 +399,9 @@ add_filter( 'get_the_excerpt', function( $excerpt, $post ) {
 
 // Owl carousel - Load JQuery
 
-add_action( 'wp_enqueue_scripts', 'tu_load_jquery' );
-if ( ! function_exists( 'tu_load_jquery' ) ) {
-    function tu_load_jquery() {
+add_action( 'wp_enqueue_scripts', 'wg_cfp_load_jquery' );
+if ( ! function_exists( 'wg_cfp_load_jquery' ) ) {
+    function wg_cfp_load_jquery() {
         wp_enqueue_script( 'jquery' );
     }
 }
@@ -736,6 +736,8 @@ add_filter( 'ssp_register_post_type_args', function ( $args ) {
 
 	return $args;
 } );
+
+wg_cfp_load_module( 'includes/author-archive-dynamic-profile.php' );
 
 if ( wg_cfp_is_main_site_context() ) {
     wg_cfp_load_module( 'includes/main-site-chat-cpt.php' );

@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-07-27T12:53:32.414Z",
+  "allPassed": true,
+  "element48767Unchanged": true,
+  "results": [
+    {
+      "slug": "anja_p",
+      "ok": true,
+      "avatarCount": 1,
+      "avatarUrl": "https://webgefaehrte.de/wp-content/uploads/Anja_p_rund-150x150.png",
+      "alt": "Profilbild von Anja (Foto webGefährte)",
+      "caption": "Anja (Foto webGefährte)",
+      "names": [
+        "Anja",
+        "Plattner"
+      ],
+      "descriptionUnchanged": true,
+      "unresolved": false,
+      "sourceLeak": false
+    },
+    {
+      "slug": "christian",
+      "ok": true,
+      "avatarCount": 1,
+      "avatarUrl": "https://webgefaehrte.de/wp-content/uploads/Christian_K_rund-1-150x150.png",
+      "alt": "Profilbild von Christian (webGefährte für Rezensionen)",
+      "caption": "Christian (webGefährte für Rezensionen)",
+      "names": [
+        "Christian",
+        "Keppel"
+      ],
+      "descriptionUnchanged": true,
+      "unresolved": false,
+      "sourceLeak": false
+    },
+    {
+      "slug": "marcel",
+      "ok": true,
+      "avatarCount": 1,
+      "avatarUrl": "https://webgefaehrte.de/wp-content/uploads/Marcel_W-rund-150x150.png",
+      "alt": "Profilbild von Marcel (webGefährte für Workflow)",
+      "caption": "Marcel (webGefährte für Workflow)",
+      "names": [
+        "Marcel",
+        "Winkler"
+      ],
+      "descriptionUnchanged": true,
+      "unresolved": false,
+      "sourceLeak": false
+    },
+    {
+      "slug": "oliver",
+      "ok": true,
+      "avatarCount": 1,
+      "avatarUrl": "https://seosharingsystem.de/wp-content/uploads/sites/9/2025/11/2025-08_Jutta-Kirsch_SEO-Share-Basisabo_2025_57_110-pdf.jpg",
+      "alt": "Profilbild von Oliver (webGefährte für Recruiting)",
+      "caption": "Oliver (webGefährte für Recruiting)",
+      "names": [
+        "Oliver",
+        "Fleidl"
+      ],
+      "descriptionUnchanged": true,
+      "unresolved": false,
+      "sourceLeak": false
+    },
+    {
+      "slug": "locke85",
+      "ok": true,
+      "avatarCount": 1,
+      "avatarUrl": "https://seosharingsystem.de/wp-content/uploads/sites/9/2025/12/webgefaehrte_Jan_C_rund_265-150x150-1.png",
+      "alt": "Profilbild von Jan (webGefährte für SEO)",
+      "caption": "Jan (webGefährte für SEO)",
+      "names": [
+        "Jan",
+        "Czichos"
+      ],
+      "descriptionUnchanged": true,
+      "unresolved": false,
+      "sourceLeak": false
+    }
+  ]
+}
