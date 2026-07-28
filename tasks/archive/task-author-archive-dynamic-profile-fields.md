@@ -2,7 +2,9 @@
 
 ## Status
 
-Umgesetzt am 2026-07-27; visuelle Browserkontrolle ausstehend
+Archiviert am 2026-07-28; umgesetzt und technisch verifiziert am 2026-07-27.
+Die visuelle Browserkontrolle war zum Abschluss nicht verfügbar und ist als
+bekannte Restprüfung dokumentiert.
 
 ## Kontext
 
