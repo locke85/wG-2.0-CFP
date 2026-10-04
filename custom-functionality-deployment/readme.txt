@@ -4,7 +4,7 @@ Tags: custom functionality, shortcodes, generatepress, smtp, multisite
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.0.2
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,24 @@ CFP uses the installed GenerateBlocks server-side dynamic tag replacement filter
 
 == Changelog ==
 
+= 2.1.1 =
+* Consolidated the Analytics production fix: the CFP-owned jQuery callback uses the collision-safe `wg_cfp_load_jquery` name.
+* Includes the modular dark-mode, TOC, reading-time, author-profile and local-avatar functionality from the current CFP source.
+
+= 2.0.5 =
+* Added local media-library avatar assignments in WordPress user profiles.
+* Membership Suite local avatars take precedence when both plugins are active.
+
+= 2.0.4 =
+* Add browser-based dark-mode Color Manager variables to the active theme's
+  additional CSS on activation, without a custom toggle.
+
+= 2.0.3 =
+* Register TOC and reading-time shortcodes after the active theme to avoid
+  collisions with child-theme callbacks.
+* Keep existing theme implementations active when they provide the same
+  shortcode.
+
 = 2.0.2 =
 * Added server-rendered GenerateBlocks author profile fallbacks for author archives without posts.
 * Resolve avatars through the WordPress avatar API for multisite compatibility.
@@ -96,6 +114,20 @@ CFP uses the installed GenerateBlocks server-side dynamic tag replacement filter
 * Improved PHP 8 compatibility.
 
 == Upgrade Notice ==
+
+= 2.1.1 =
+Keeps the safe jQuery callback name and includes the current modular CFP functionality.
+
+= 2.0.5 =
+Adds local avatar assignments from the media library and keeps Membership Suite
+avatars authoritative when both plugins are active.
+
+= 2.0.4 =
+Adds browser-based dark-mode Color Manager variables without a custom toggle.
+
+= 2.0.3 =
+Avoids function-name collisions with existing child-theme TOC and reading-time
+implementations.
 
 = 2.0.2 =
 Adds server-rendered, multisite-safe author profile fallbacks for GenerateBlocks author archives.

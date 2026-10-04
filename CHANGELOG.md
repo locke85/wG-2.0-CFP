@@ -3,6 +3,32 @@
 Alle wesentlichen Änderungen am webGefaehrte Custom Functionality Plugin werden
 in dieser Datei dokumentiert.
 
+## 2.1.1 – 2026-10-04
+
+- Die konfliktfreie jQuery-Callback-Bezeichnung `wg_cfp_load_jquery` ist als
+  verbindlicher Release-Stand dokumentiert.
+- Der Release bündelt die modularen Dark-Mode-, TOC-, Lesezeit-,
+  Autorenprofil- und lokalen Avatar-Funktionen der aktuellen Quelle.
+
+## 2.0.5 – 2026-10-04
+
+- Lokale Avatar-Zuordnung aus der WordPress-Mediathek im Benutzerprofil ergänzt.
+- CFP nutzt die WordPress-Avatar-API und überlässt einen vorhandenen lokalen
+  Avatar der Membership Suite stets dieser Erweiterung.
+
+## 2.0.4 – 2026-10-04
+
+- Browserbasierte Dark-Mode-Variablen fuer den GeneratePress Color Manager
+  beim Aktivieren einmalig in das zusaetzliche CSS des aktiven Themes ergänzt.
+- Die Media Query `prefers-color-scheme` funktioniert ohne Umschalter und
+  ohne Speicherung einer Nutzerpraeferenz.
+
+## 2.0.3 – 2026-10-04
+
+- TOC- und Lesezeit-Shortcodes werden erst nach dem aktiven Theme registriert.
+- CFP verwendet für beide Funktionen eigene `wg_cfp_`-Callbacks und lässt die
+  gleichnamige Theme-Funktionalität unverändert aktiv.
+
 ## 2.0.2 – 2026-07-27
 
 - Serverseitige GenerateBlocks-Fallbacks für Autorenarchive ohne regulären

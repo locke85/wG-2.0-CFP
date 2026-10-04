@@ -3,7 +3,7 @@
 Plugin Name: webGefährte Custom Functionality Plugin
 Description: The Custom Functionality Plugin (CFP) extends WordPress sites with custom post types, new shortcodes or custom widgets w/o the using multiple 3rd-party plugins.
 
-Version: 2.0.2
+Version: 2.1.1
 Author: Jan (webGefährte)
 */
 
@@ -26,6 +26,10 @@ if ( ! function_exists( 'wg_cfp_is_main_site_context' ) ) {
         return (int) get_current_blog_id() === (int) get_main_site_id();
     }
 }
+
+// Browser-basierter Dark Mode fuer GeneratePress Color Manager Variablen.
+wg_cfp_load_module( 'includes/dark-mode.php' );
+register_activation_hook( __FILE__, 'wg_cfp_install_dark_mode_custom_css' );
 
 // WP - Activate Drop down filter for authors on Posts and Pages
 
@@ -81,111 +85,12 @@ if ( ! function_exists( 'wg_cfp_enqueue_fontawesome' ) ) {
 }
 add_action( 'wp_enqueue_scripts', 'wg_cfp_enqueue_fontawesome' );
 
-// wG - TOC-Shortcode und Anchor-Filter
+// wG - TOC-Shortcode und Anchor-Filter. Das Modul entscheidet erst nach dem
+// Laden des Themes, ob es die TOC-Funktionalitaet bereitstellt.
+wg_cfp_load_module( 'includes/toc.php' );
 
-if ( ! function_exists( 'wp_h2_toc_debug' ) ) {
-    function wp_h2_toc_debug( $message ) {
-        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-            error_log( '[TOC DEBUG] ' . $message );
-        }
-    }
-}
-
-if ( ! function_exists( 'wp_h2_toc_shortcode' ) ) {
-    function wp_h2_toc_shortcode() {
-        if ( ! is_singular() ) {
-            wp_h2_toc_debug( 'Nicht singular.' );
-            return '';
-        }
-
-        global $post;
-        if ( ! $post ) {
-            wp_h2_toc_debug( 'Kein Post gefunden.' );
-            return '';
-        }
-        $content = $post->post_content;
-
-        // KEIN apply_filters('the_content', $content) hier!
-        preg_match_all( '/<h2[^>]*>(.*?)<\/h2>/i', $content, $matches );
-
-        if ( empty( $matches[1] ) ) {
-            wp_h2_toc_debug( 'Keine H2 gefunden.' );
-            return '';
-        }
-
-        $toc = '<div style="text-align:center;"><ul style="margin-left:20px; text-align:left;">';
-
-        foreach ( $matches[1] as $heading ) {
-            $slug = sanitize_title( $heading );
-            $toc .= '<li><a href="#' . esc_attr( $slug ) . '">' . esc_html( wp_strip_all_tags( $heading ) ) . '</a></li>';
-        }
-
-        $toc .= '</ul></div>';
-
-        wp_h2_toc_debug( 'TOC erfolgreich generiert.' );
-
-        return $toc;
-    }
-}
-
-// H2-Anker automatisch einfügen
-if ( ! function_exists( 'wp_h2_add_anchors' ) ) {
-    function wp_h2_add_anchors( $content ) {
-        if ( ! is_singular() ) {
-            wp_h2_toc_debug( 'Anchor: Nicht singular.' );
-            return $content;
-        }
-
-        preg_match_all( '/<h2[^>]*>(.*?)<\/h2>/i', $content, $matches );
-
-        if ( empty( $matches[1] ) ) {
-            wp_h2_toc_debug( 'Anchor: Keine H2 gefunden.' );
-            return $content;
-        }
-
-        foreach ( $matches[1] as $heading ) {
-            $slug = sanitize_title( $heading );
-            if ( strpos( $content, 'id="' . $slug . '"' ) === false ) {
-                $content = preg_replace(
-                    '/(<h2[^>]*>)' . preg_quote( $heading, '/' ) . '(<\/h2>)/i',
-                    '$1<a id="' . esc_attr( $slug ) . '"></a>' . $heading . '$2',
-                    $content,
-                    1
-                );
-                wp_h2_toc_debug( 'Anchor hinzugefügt: ' . $slug );
-            }
-        }
-
-        return $content;
-    }
-}
-add_filter( 'the_content', 'wp_h2_add_anchors' );
-add_shortcode( 'toc', 'wp_h2_toc_shortcode' );
-
-// GP - Esimated reading time
-
-if ( ! function_exists( 'tu_estimated_reading_time_shortcode' ) ) {
-    function tu_estimated_reading_time_shortcode() {
-        if ( ! is_singular() ) {
-            return '';
-        }
-
-        $post = get_post();
-        if ( ! $post ) {
-            return '';
-        }
-
-        $content       = $post->post_content;
-        $wpm           = 300;
-        $clean_content = strip_shortcodes( $content );
-        $clean_content = wp_strip_all_tags( $clean_content );
-        $word_count    = str_word_count( $clean_content );
-        $time          = ceil( $word_count / $wpm );
-
-        return '<span class="read-time">⏱ ' . esc_html( (string) $time ) . ' min Lesezeit</span>';
-    }
-}
-add_shortcode( 'lesezeit', 'tu_estimated_reading_time_shortcode' );
+// GP - Geschätzte Lesezeit. Die Registrierung erfolgt erst nach dem Theme.
+wg_cfp_load_module( 'includes/reading-time.php' );
 
 /* wG - Minimal SMTP Setup via wp-config.php - Nutzt Konstanten aus wp-config.php für den SMTP-Versand über wp_mail() */
 
@@ -738,6 +643,7 @@ add_filter( 'ssp_register_post_type_args', function ( $args ) {
 } );
 
 wg_cfp_load_module( 'includes/author-archive-dynamic-profile.php' );
+wg_cfp_load_module( 'includes/local-avatar.php' );
 
 if ( wg_cfp_is_main_site_context() ) {
     wg_cfp_load_module( 'includes/main-site-chat-cpt.php' );
