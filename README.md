@@ -1,6 +1,6 @@
 # webGefaehrte Custom Functionality Plugin
 
-Aktuelle Release-Version: `2.0.2`. Die vollständige Änderungshistorie steht in
+Aktuelle Release-Version: `2.5.0`. Die vollständige Änderungshistorie steht in
 [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Zweck
@@ -48,6 +48,63 @@ GenerateBlocks 2.x bezieht `author_meta` und `author_avatar_url` aus dem Autor d
 - Der bestehende GenerateBlocks-Media-Block erhaelt beim Fallback einen Alt-Text mit dem Anzeigenamen.
 
 Shortcodes wurden bewusst nicht verwendet: Der vorhandene Element-Aufbau bleibt damit unveraendert, und die in GenerateBlocks 2.2.0 bereitgestellten PHP-Filter erlauben einen engeren, rein serverseitigen Eingriff. Element 48767 muss nicht geaendert werden.
+
+## Selbst gehosteter Formularschutz
+
+CFP 2.2.0 enthält einen optionalen Schutz für GenerateBlocks-Pro-Formulare.
+Er ist nach der Installation vollständig deaktiviert. Eine Administratorin
+trägt unter **Einstellungen → CFP Formularschutz** ausschließlich die
+Formular-IDs ein, die geschützt werden sollen.
+
+Für jedes dieser Formulare erzeugt die eigene WordPress-Installation eine
+kurz gültige, HMAC-signierte Rechenaufgabe. Das versionierte Browser-Asset löst
+sie im Browser und reicht die Lösung mit dem Formular ein. CFP prüft sie im
+GenerateBlocks-Hook `generateblocks_form_verify_submission`, also vor
+Sanitisierung, Speicher-, E-Mail- oder Webhook-Aktionen. Eine Challenge wird
+bei ihrem ersten Prüfversuch ungültig. Der Ablauf nutzt weder einen externen
+Dienst noch Tracking, Cookies, IP-Adressen oder Formularinhalte.
+
+Die zusätzliche Option „Mehrfeld-Zufallszeichenmuster“ ist nur für Formulare
+mit dem belegten Muster gedacht: mindestens drei lange zusammenhängende
+alphanumerische Werte und eine lange wortlose Eingabe. Sie ergänzt bestehende
+Honeypot-, Token-, Origin- und Rate-Limit-Mechanismen, ersetzt sie aber nicht.
+
+Für statisch nachgeladene Formulare kann deren Runtime nach dem Einfügen des
+versionierten Assets `window.WGCfpFormAbuseGuard.init(container)` aufrufen.
+Die REST-Route bleibt same-origin unter
+`/wp-json/wg-cfp/v1/form-challenge?form_id=<ID>`.
+
+## GenerateBlocks-Pro-Formulare auf statischen Seiten
+
+CFP stellt einen allgemeinen, deaktivierten Same-Origin-Renderweg für
+GenerateBlocks-Pro-Formulare in statischen Seitenschalen bereit. WordPress-
+Seiten verwenden weiterhin die native GenerateBlocks-Ausgabe; sie erhalten
+weder eine zweite Runtime noch eine statische Konfiguration.
+
+Ein Sitevertrag trägt sich über den Filter
+`wg_cfp_generateblocks_static_forms` ein. Jede Definition enthält eine
+`form_id` und eine Whitelist von `allowed_routes`. Der Endpoint lautet
+`/wp-json/wg-cfp/v1/static-form/<form_id>?route=<Pfad>&post_id=<ID>` und
+liefert nur frisches Formular-Markup, versionierte Asset-URLs und die
+Runtime-Konfiguration. Challenge, Nonce, Honeypot und Nutzereingaben bleiben
+außerhalb der Antwort. Der statische Loader übernimmt die `cfp_config`, lädt
+das CFP-Asset einmal und ruft danach
+`window.WGCfpFormAbuseGuard.init(container)` auf.
+
+## Buchungsformularprofile
+
+CFP 2.4.0 verwendet die Option `wg_cfp_generateblocks_booking_forms` mit einer
+Liste allgemeiner Profile. Ein Profil bleibt ohne `enabled` vollständig
+inaktiv. Aktivierte Profile definieren Formular-ID, erlaubte Renderrouten,
+Archivtyp und Metafeld, Auswahlwerte, Rate-Limit und Exportdatei. So bleibt
+die Erweiterung für weitere Sites wiederverwendbar, ohne neue PHP-Dateien.
+
+CFP prüft die Challenge vor allen nachgelagerten GB-Pro-Aktionen, akzeptiert nur
+die je Profil festgelegten Auswahlwerte und archiviert erfolgreiche Anfragen
+im nicht öffentlichen, profilierten Inhaltstyp. Der Zähler
+nutzt nur `REMOTE_ADDR` und erhöht sich erst nach erfolgreicher Archivierung.
+Administratoren mit `manage_options` sehen die Einträge und können sie per
+nonce-geschütztem CSV-Download exportieren.
 
 ## Hauptseiten-Module
 

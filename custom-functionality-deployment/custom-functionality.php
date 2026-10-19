@@ -3,9 +3,12 @@
 Plugin Name: webGefährte Custom Functionality Plugin
 Description: The Custom Functionality Plugin (CFP) extends WordPress sites with custom post types, new shortcodes or custom widgets w/o the using multiple 3rd-party plugins.
 
-Version: 2.1.1
+Version: 2.5.0
 Author: Jan (webGefährte)
 */
+
+define( 'WG_CFP_VERSION', '2.5.0' );
+define( 'WG_CFP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 if ( ! function_exists( 'wg_cfp_load_module' ) ) {
     function wg_cfp_load_module( $relative_path ) {
@@ -91,6 +94,11 @@ wg_cfp_load_module( 'includes/toc.php' );
 
 // GP - Geschätzte Lesezeit. Die Registrierung erfolgt erst nach dem Theme.
 wg_cfp_load_module( 'includes/reading-time.php' );
+
+// Selbst gehosteter Formularschutz für explizit konfigurierte GB-Pro-Formulare.
+wg_cfp_load_module( 'includes/form-abuse-guard.php' );
+wg_cfp_load_module( 'includes/generateblocks-static-forms.php' );
+wg_cfp_load_module( 'includes/generateblocks-booking-forms.php' );
 
 /* wG - Minimal SMTP Setup via wp-config.php - Nutzt Konstanten aus wp-config.php für den SMTP-Versand über wp_mail() */
 

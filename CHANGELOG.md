@@ -3,6 +3,49 @@
 Alle wesentlichen Änderungen am webGefaehrte Custom Functionality Plugin werden
 in dieser Datei dokumentiert.
 
+## 2.5.0 – 2026-10-19
+
+- Den allgemeinen GenerateBlocks-Pro-Formularvertrag als Release gebündelt.
+  Profile erlauben eigene Formulare, Routen, Archive, Auswahlwerte und
+  Rate-Limits ohne sitespezifische PHP-Erweiterung.
+- Die native GenerateBlocks-Ausgabe auf WordPress-Seiten bleibt unverändert.
+  Der dynamische CFP-Renderweg wird nur für ausdrücklich konfigurierte
+  statische Seitenschalen genutzt.
+
+## 2.4.0 – 2026-10-06
+
+- Den festen Alissa-Adapter durch einen allgemeinen, mehrfach konfigurierbaren
+  GenerateBlocks-Pro-Buchungsformularvertrag ersetzt.
+- Profile konfigurieren Formular, Routen, Auswahlwerte, Archivtyp,
+  Metadatenfeld, Export und Rate-Limit ohne site-spezifischen PHP-Code.
+- Eine versionierte CFP-Runtime lädt Formulare in statischen Seitenschalen und
+  initialisiert danach den vorhandenen selbst gehosteten Formularschutz.
+
+## 2.3.0 – 2026-10-06
+
+- Optionalen Vertrag für Alissas GenerateBlocks-Pro-Buchungsformular ergänzt:
+  dynamischer Renderendpunkt, versionierte Same-Origin-Assets, dauerhafte
+  Ablage, Administratoransicht und nonce-geschützter CSV-Export.
+- Der Vertrag prüft die zwei Anliegen- und sieben Herkunftswerte serverseitig,
+  verwendet ausschließlich die Serveradresse für das Rate-Limit und zählt erst
+  nach erfolgreicher Ablage.
+- Ohne aktivierte, site-spezifische Konfiguration bleibt die Erweiterung auf
+  allen Sites inaktiv.
+- Der statische Renderweg ist als allgemeines GenerateBlocks-Pro-Modul
+  ausgeführt. Das Alissa-Profil verwendet ihn nur als eine optionale
+  Formdefinition.
+
+## 2.2.0 – 2026-10-06
+
+- Optionalen, selbst gehosteten Formularschutz für ausdrücklich konfigurierte
+  GenerateBlocks-Pro-Formular-IDs ergänzt.
+- Kurzlebige, HMAC-signierte Proof-of-Work-Challenges werden vor der
+  GenerateBlocks-Feldsanitisierung geprüft und nach dem ersten Prüfversuch
+  verbraucht.
+- Versioniertes Browser-Asset, Einstellungsseite und optionale Erkennung eines
+  engen Mehrfeld-Zufallszeichenmusters ergänzt.
+- Ohne konfigurierte Formular-ID bleibt das Modul vollständig inaktiv.
+
 ## 2.1.1 – 2026-10-04
 
 - Die konfliktfreie jQuery-Callback-Bezeichnung `wg_cfp_load_jquery` ist als

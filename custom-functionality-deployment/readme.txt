@@ -4,7 +4,7 @@ Tags: custom functionality, shortcodes, generatepress, smtp, multisite
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.1.1
+Stable tag: 2.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,7 @@ The webGefaehrte Custom Functionality Plugin centralizes shared website function
 * Chat archive helpers, `display_post_type` and `chat_category_grid`.
 * Optional HTML support for user profile descriptions via filter.
 * Server-rendered GenerateBlocks author profile fallbacks on empty author archives.
+* Optional self-hosted proof-of-work abuse guard for explicitly configured GenerateBlocks Pro forms.
 
 = Main-site-only modules =
 
@@ -65,7 +66,24 @@ The `wg_seo_chat_form` shortcode is only available to logged-in users with `edit
 
 CFP uses the installed GenerateBlocks server-side dynamic tag replacement filters. It only fills unresolved `author_avatar_url` and whitelisted `author_meta` values (`display_name`, `first_name`, `last_name`) on real author archives. Existing GenerateBlocks profile data is preserved; a missing avatar alt text is added for accessibility. The avatar comes from the WordPress avatar API, defaults to 150px and can be configured with `WG_CFP_AUTHOR_ARCHIVE_AVATAR_SIZE` or the `wg_cfp_author_archive_avatar_size` filter.
 
+= How do I enable the form abuse guard? =
+
+Go to Settings > CFP Formularschutz and enter only the GenerateBlocks Pro form IDs that need protection. CFP then issues and verifies same-origin, short-lived proof-of-work challenges before GenerateBlocks form actions run. The feature is disabled when no form ID is configured and does not call an external CAPTCHA or tracking service.
+
 == Changelog ==
+
+= 2.5.0 =
+* Released the general GenerateBlocks Pro form contract with profile-specific archive, export and rate-limit settings.
+* Kept native GenerateBlocks rendering unchanged on normal WordPress pages.
+
+= 2.4.0 =
+* Added a reusable, profile-configured GenerateBlocks Pro booking-form contract.
+* Static page shells can load a fresh same-origin form runtime without changing native WordPress page rendering.
+
+= 2.2.0 =
+* Added an opt-in, self-hosted proof-of-work guard for explicitly configured GenerateBlocks Pro form IDs.
+* Challenges are short-lived, HMAC-signed and consumed after their first verification attempt.
+* Added an optional multi-field random-token pattern guard and a versioned browser asset.
 
 = 2.1.1 =
 * Consolidated the Analytics production fix: the CFP-owned jQuery callback uses the collision-safe `wg_cfp_load_jquery` name.
